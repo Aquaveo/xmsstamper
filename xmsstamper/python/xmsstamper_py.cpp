@@ -21,12 +21,21 @@ std::string version() {
 
 //------ Primary Module --------------------------------------------------------
 PYBIND11_MODULE(xmsstamper_py, m) {
-    m.doc() = "Python bindings for the xmsstamper library"; // optional module docstring
+    m.doc() = "Python bindings for the xmsstamper library"; 
     m.def("version", &version,
           "Get current version of xmsstamper Python bindings.");
 
+    const char* stamper_doc = R"pydoc(
+        The stamper module of the xmsstamper python library contains classes 
+        and functions for performing feature stamping. The basic idea is to 
+        associate cross sections with a center line to produce a new feature 
+        (a "fill" embankment, a "cut" channel). The output from the feature 
+        stamp is a TIN and a set of break lines defining distinct 
+        characteristics of the new feature, such as the center line, shoulder, 
+        toe, and end cap.
+    )pydoc";
     // Stamper module
-    py::module modStamper = m.def_submodule("stamper");
+    py::module modStamper = m.def_submodule("stamper",stamper_doc);
     initStamper(modStamper);
 }
 

@@ -408,7 +408,7 @@ void XmStampRaster::WriteToFile(std::ofstream &a_file, const std::string &a_card
   a_file << "NODATA " << m_noData;
 } // XmStampRaster::WriteToFile
 //------------------------------------------------------------------------------
-/// \brief Reads the XmStampRaster class information to a file.
+/// \brief Reads the XmStampRaster class information from a file.
 /// \param[in] a_file: The input file.
 /// \return true if file read is successful. false if errors encountered.
 //------------------------------------------------------------------------------
