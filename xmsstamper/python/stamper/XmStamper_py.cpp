@@ -126,11 +126,10 @@ void initXmStamper(py::module &m)
       Args:
           observer (Observer): Observer class to provide feedback.
   )pydoc";
-  
+
   stamper.def("set_observer",
   [](xms::XmStamper &self, boost::shared_ptr<xms::PublicObserver> observer)
   {
     self.SetObserver(observer);
-  },
-  set_observer_doc);
+  },set_observer_doc);
 }
