@@ -639,7 +639,7 @@ void initXmStamperIo(py::module &m)
       Gets the TIN created by the stamp operation
 
       Return:
-          The output TIN
+          TrTin: The output TIN
   )pydoc";
   stamper_io.def("get_out_tin",
   [](xms::XmStamperIo &self) -> boost::shared_ptr<xms::TrTin>

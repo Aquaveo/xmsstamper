@@ -76,7 +76,7 @@ void initXmStamper(py::module &m)
       Returns the point locations created by the stamp operation.
 
       Returns:
-          py::iterable (VecPt3d): Point locations.
+          iterable (VecPt3d): Point locations.
   )pydoc";
 
   stamper.def("get_points",
@@ -92,7 +92,7 @@ void initXmStamper(py::module &m)
       Returns breaklines created by the stamp operation.
 
       Returns:
-          py::iterable (VecInt2d): Breakline segments.
+          iterable (VecInt2d): Breakline segments.
   )pydoc";
 
   stamper.def("get_segments",
@@ -109,7 +109,7 @@ void initXmStamper(py::module &m)
       Returns the type of breaklines.
 
       Returns:
-          py::iterable (VecInt): Breakline types.
+          iterable (VecInt): Breakline types.
   )pydoc";
   stamper.def("get_breakline_types",
   [](xms::XmStamper &self) -> py::iterable
