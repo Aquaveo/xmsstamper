@@ -56,7 +56,7 @@ void initXmStamper(py::module &m)
       Converts XmStamperCenterlineProfile class to XmStamperIo class inputs.
 
       Args:
-          stamper_io (XmStamperIo): The stamping input/output class
+          stamper_io (XmStamperIo): The stamping input/output class.
           profile (XmStamperCenterlineProfile): The stamping centerline profile 
             class.
   )pydoc";
@@ -121,7 +121,7 @@ void initXmStamper(py::module &m)
   // definition:  virtual const VecInt& GetBreaklineTypes() = 0;
   // ---------------------------------------------------------------------------
   const char* set_observer_doc = R"pydoc(
-      Sets the observer class to get feedback on the meshing process
+      Sets the observer class to get feedback on the meshing process.
 
       Args:
           observer (Observer): Observer class to provide feedback.

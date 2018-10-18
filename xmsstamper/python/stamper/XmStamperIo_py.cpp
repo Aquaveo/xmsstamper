@@ -168,7 +168,7 @@ void initXmStamperIo(py::module &m)
       
       Args:
          file_name (str): The output raster filename.
-         format (): The output raster format.
+         format (XmRasterFormatEnum): The output raster format.
   )pydoc";
   stamp_raster.def("write_grid_file",
     &xms::XmStampRaster::WriteGridFile,
@@ -230,7 +230,7 @@ void initXmStamperIo(py::module &m)
   // property: wing_wall_angle
   // ---------------------------------------------------------------------------
   const char* wing_wall_angle_doc = R"pydoc(
-       Degrees from 0 to 60
+       Degrees from 0 to 60.
   )pydoc";
   stamper_wing_wall.def_readwrite("wing_wall_angle", 
              &xms::XmWingWall::m_wingWallAngle, wing_wall_angle_doc);
@@ -250,7 +250,7 @@ void initXmStamperIo(py::module &m)
   // property: max_x
   // ---------------------------------------------------------------------------
   const char* max_x_doc = R"pydoc(
-       Max distance from center line
+       Max distance from center line.
   )pydoc";
   stamper_sloped_abutment.def_readwrite("max_x", 
     &xms::XmSlopedAbutment::m_maxX, max_x_doc);
@@ -258,7 +258,7 @@ void initXmStamperIo(py::module &m)
   // property: slope
   // ---------------------------------------------------------------------------
   const char* slope_doc = R"pydoc(
-      x,y pairs defining slope from center line
+      x,y pairs defining slope from center line.
   )pydoc";
   stamper_sloped_abutment.def_property("slope",
     [](xms::XmSlopedAbutment &self) -> py::iterable
@@ -287,7 +287,7 @@ void initXmStamperIo(py::module &m)
   // property: side
   // ---------------------------------------------------------------------------
   const char* side_doc = R"pydoc(
-       Position of guidebank relative to center line, 0-left, 1-right
+       Position of guidebank relative to center line, 0-left, 1-right.
   )pydoc";
   stamper_guide_bank.def_readwrite("side",
     &xms::XmGuidebank::m_side, side_doc);
@@ -295,7 +295,7 @@ void initXmStamperIo(py::module &m)
   // property: radius1
   // ---------------------------------------------------------------------------
   const char* radius1_doc = R"pydoc(
-       First radius (R1) for guidebank creation
+       First radius (R1) for guidebank creation.
   )pydoc";
   stamper_guide_bank.def_readwrite("radius1",
     &xms::XmGuidebank::m_radius1, radius1_doc);
@@ -303,7 +303,7 @@ void initXmStamperIo(py::module &m)
   // property: m_radius2
   // ---------------------------------------------------------------------------
   const char* radius2_doc = R"pydoc(
-       Second radius (R2) for guidebank creation
+       Second radius (R2) for guidebank creation.
   )pydoc";
   stamper_guide_bank.def_readwrite("radius2",
     &xms::XmGuidebank::m_radius2, radius2_doc);
@@ -311,7 +311,7 @@ void initXmStamperIo(py::module &m)
   // property: m_width
   // ---------------------------------------------------------------------------
   const char* width_doc = R"pydoc(
-       Width of guidebank about the center line
+       Width of guidebank about the center line.
   )pydoc";
   stamper_guide_bank.def_readwrite("width",
     &xms::XmGuidebank::m_width, width_doc);
@@ -319,7 +319,7 @@ void initXmStamperIo(py::module &m)
   // property: n_pts
   // ---------------------------------------------------------------------------
   const char* n_pts_doc = R"pydoc(
-       n_pts of guidebank about the center line
+       n_pts of guidebank about the center line.
   )pydoc";
   stamper_guide_bank.def_readwrite("n_pts",
     &xms::XmGuidebank::m_nPts, n_pts_doc);
@@ -343,7 +343,7 @@ void initXmStamperIo(py::module &m)
   // property: type
   // ---------------------------------------------------------------------------
   const char* type_doc = R"pydoc(
-       Type of end cap: 0- guidebank, 1- sloped abutment, 2- wing wall
+       Type of end cap: 0- guidebank, 1- sloped abutment, 2- wing wall.
   )pydoc";
   stamper_end_cap.def_readwrite("type",
     &xms::XmStamperEndCap::m_type, type_doc);
@@ -351,7 +351,7 @@ void initXmStamperIo(py::module &m)
   // property: angle
   // ---------------------------------------------------------------------------
   const char* angle_doc = R"pydoc(
-       Degrees from -45 to 45
+       Degrees from -45 to 45.
   )pydoc";
   stamper_end_cap.def_readwrite("angle",
     &xms::XmStamperEndCap::m_angle, angle_doc);
@@ -359,7 +359,7 @@ void initXmStamperIo(py::module &m)
   // property: guidebank
   // ---------------------------------------------------------------------------
   const char* guidebank_doc = R"pydoc(
-       Guidebank definition
+       Guidebank definition.
   )pydoc";
   stamper_end_cap.def_readwrite("guidebank",
     &xms::XmStamperEndCap::m_guidebank, guidebank_doc);
@@ -367,7 +367,7 @@ void initXmStamperIo(py::module &m)
   // property: sloped_abutment
   // ---------------------------------------------------------------------------
   const char* sloped_abutment_doc = R"pydoc(
-       Sloped abutment definition
+       Sloped abutment definition.
   )pydoc";
   stamper_end_cap.def_readwrite("sloped_abutment",
     &xms::XmStamperEndCap::m_slopedAbutment, sloped_abutment_doc);
@@ -375,7 +375,7 @@ void initXmStamperIo(py::module &m)
   // property: wing_wall
   // ---------------------------------------------------------------------------
   const char* wing_wall_doc = R"pydoc(
-       Wing wall definition
+       Wing wall definition.
   )pydoc";
   stamper_end_cap.def_readwrite("wing_wall",
     &xms::XmStamperEndCap::m_wingWall, wing_wall_doc);
@@ -397,7 +397,7 @@ void initXmStamperIo(py::module &m)
   // property: left
   // ---------------------------------------------------------------------------
   const char* left_doc = R"pydoc(
-      Points defining the cross section
+      Points defining the cross section.
   )pydoc";
   stamper_cross_section.def_property("left",
             [](xms::XmStampCrossSection &self) -> py::iterable
@@ -414,7 +414,7 @@ void initXmStamperIo(py::module &m)
   // property: left_max
   // ---------------------------------------------------------------------------
   const char* left_max_doc = R"pydoc(
-      Max x value for left side
+      Max x value for left side.
   )pydoc";
   stamper_cross_section.def_readwrite("left_max", &xms::XmStampCrossSection::m_leftMax,
     left_max_doc);
@@ -422,7 +422,7 @@ void initXmStamperIo(py::module &m)
   // property: index_left_shoulder
   // ---------------------------------------------------------------------------
   const char* index_left_shoulder_doc = R"pydoc(
-      index to the shoulder point in the left point list
+      Index to the shoulder point in the left point list.
   )pydoc";
   stamper_cross_section.def_readwrite("index_left_shoulder", &xms::XmStampCrossSection::
     m_idxLeftShoulder, index_left_shoulder_doc);
@@ -430,7 +430,7 @@ void initXmStamperIo(py::module &m)
   // property: right
   // ---------------------------------------------------------------------------
   const char* right_doc = R"pydoc(
-      Points defining the cross section
+      Points defining the cross section.
   )pydoc";
   stamper_cross_section.def_property("right",
             [](xms::XmStampCrossSection &self) -> py::iterable
@@ -447,7 +447,7 @@ void initXmStamperIo(py::module &m)
   // property: right_max
   // ---------------------------------------------------------------------------
   const char* right_max_doc = R"pydoc(
-      Max x value for right side
+      Max x value for right side.
   )pydoc";
   stamper_cross_section.def_readwrite("right_max", &xms::XmStampCrossSection::m_rightMax,
     right_max_doc);
@@ -455,7 +455,7 @@ void initXmStamperIo(py::module &m)
   // property: index_right_shoulder
   // ---------------------------------------------------------------------------
   const char* index_right_shoulder_doc = R"pydoc(
-      index to the shoulder point in the right point list
+      Index to the shoulder point in the right point list.
   )pydoc";
   stamper_cross_section.def_readwrite("index_right_shoulder", &xms::XmStampCrossSection::
     m_idxRightShoulder, index_right_shoulder_doc);
@@ -473,7 +473,7 @@ void initXmStamperIo(py::module &m)
   // property: distance
   // ---------------------------------------------------------------------------
   const char* distance_doc = R"pydoc(
-      Distance from start of polyline for cross section
+      Distance from start of polyline for cross section.
   )pydoc";
   stamper_centerline_profile.def_property("distance",
             [](xms::XmStamperCenterlineProfile &self) -> py::iterable
@@ -490,7 +490,7 @@ void initXmStamperIo(py::module &m)
   // property: elevation
   // ---------------------------------------------------------------------------
   const char* elevation_doc = R"pydoc(
-      Elevation at the cross section location
+      Elevation at the cross section location.
   )pydoc";
   stamper_centerline_profile.def_property("elevation",
   [](xms::XmStamperCenterlineProfile &self) -> py::iterable
@@ -506,7 +506,7 @@ void initXmStamperIo(py::module &m)
   // function: cs
   // ---------------------------------------------------------------------------
   const char* cs_centerline_doc = R"pydoc(
-    Cross sections along the polyLine
+    Cross sections along the polyLine.
   )pydoc";
   stamper_centerline_profile.def_property("cs",
     [](xms::XmStamperCenterlineProfile &self) -> py::iterable
@@ -542,7 +542,7 @@ void initXmStamperIo(py::module &m)
   // property: centerline
   // ---------------------------------------------------------------------------
   const char* centerline_doc = R"pydoc(
-      Center line for the feature stamp (Required)
+      Center line for the feature stamp (Required).
   )pydoc";
   stamper_io.def_property("centerline",
   [](xms::XmStamperIo &self) -> py::iterable
@@ -558,7 +558,7 @@ void initXmStamperIo(py::module &m)
   // property: stamping_type
   // ---------------------------------------------------------------------------
   const char* stamping_type_doc = R"pydoc(
-      The stamping type.  0 - Cut, 1 - Fill
+      The stamping type.  0 - Cut, 1 - Fill.
   )pydoc";
   stamper_io.def_readwrite("stamping_type", &xms::XmStamperIo::m_stampingType,
     stamping_type_doc
@@ -567,7 +567,7 @@ void initXmStamperIo(py::module &m)
   // property: cs
   // ---------------------------------------------------------------------------
   const char* cs_io_doc = R"pydoc(
-    Cross sections along the polyLine
+    Cross sections along the polyLine.
   )pydoc";
   stamper_io.def_property("cs",
     [](xms::XmStamperIo &self) -> py::iterable
@@ -596,7 +596,7 @@ void initXmStamperIo(py::module &m)
   // property: first_end_cap
   // ---------------------------------------------------------------------------
   const char* first_end_cap_doc = R"pydoc(
-      end cap at beginnig of polyline
+      End cap at beginnig of polyline.
   )pydoc";
   stamper_io.def_readwrite("first_end_cap", &xms::XmStamperIo::m_firstEndCap,
   first_end_cap_doc);
@@ -604,7 +604,7 @@ void initXmStamperIo(py::module &m)
   // property: last_end_cap
   // ---------------------------------------------------------------------------
   const char* last_end_cap_doc = R"pydoc(
-      end cap at end of polyline
+      End cap at end of polyline.
   )pydoc";
   stamper_io.def_readwrite("last_end_cap", &xms::XmStamperIo::m_lastEndCap,
     last_end_cap_doc);
@@ -612,7 +612,7 @@ void initXmStamperIo(py::module &m)
   // property: last_end_cap
   // ---------------------------------------------------------------------------
   const char* raster_doc = R"pydoc(
-      Input/output raster to stamp the resulting elevations onto this raster
+      Input/output raster to stamp the resulting elevations onto this raster.
   )pydoc";
   stamper_io.def_readwrite("raster", &xms::XmStamperIo::m_raster,
     raster_doc);
@@ -620,7 +620,7 @@ void initXmStamperIo(py::module &m)
   // property: bathymetry
   // ---------------------------------------------------------------------------
   const char* bathymetry_doc = R"pydoc(
-      Underlying bathymetry
+      Underlying bathymetry.
   )pydoc";
   stamper_io.def_property("bathymetry",
   [](xms::XmStamperIo &self) -> boost::shared_ptr<xms::TrTin>
@@ -636,10 +636,10 @@ void initXmStamperIo(py::module &m)
   // function: get_out_tin
   // ---------------------------------------------------------------------------
   const char* get_out_tin_doc = R"pydoc(
-      Gets the TIN created by the stamp operation
+      Gets the TIN created by the stamp operation.
 
       Return:
-          TrTin: The output TIN
+          TrTin: The output TIN.
   )pydoc";
   stamper_io.def("get_out_tin",
   [](xms::XmStamperIo &self) -> boost::shared_ptr<xms::TrTin>
@@ -651,7 +651,7 @@ void initXmStamperIo(py::module &m)
   // property: breaklines
   // ---------------------------------------------------------------------------
   const char* breaklines_doc = R"pydoc(
-      Breaklines that are honored in the TIN
+      Breaklines that are honored in the TIN.
   )pydoc";
   stamper_io.def_property("breaklines",
   [](xms::XmStamperIo &self) -> py::iterable
