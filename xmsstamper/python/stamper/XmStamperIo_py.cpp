@@ -168,7 +168,7 @@ void initXmStamperIo(py::module &m)
       
       Args:
          file_name (str): The output raster filename.
-         format (XmRasterFormatEnum): The output raster format.
+         format (raster_format_enum): The output raster format.
   )pydoc";
   stamp_raster.def("write_grid_file",
     &xms::XmStampRaster::WriteGridFile,
