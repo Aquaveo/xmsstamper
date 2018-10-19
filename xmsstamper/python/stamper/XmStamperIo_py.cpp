@@ -416,16 +416,16 @@ void initXmStamperIo(py::module &m)
   const char* left_max_doc = R"pydoc(
       Max x value for left side.
   )pydoc";
-  stamper_cross_section.def_readwrite("left_max", &xms::XmStampCrossSection::m_leftMax,
-    left_max_doc);
+  stamper_cross_section.def_readwrite("left_max", 
+    &xms::XmStampCrossSection::m_leftMax, left_max_doc);
   // ---------------------------------------------------------------------------
   // property: index_left_shoulder
   // ---------------------------------------------------------------------------
   const char* index_left_shoulder_doc = R"pydoc(
       Index to the shoulder point in the left point list.
   )pydoc";
-  stamper_cross_section.def_readwrite("index_left_shoulder", &xms::XmStampCrossSection::
-    m_idxLeftShoulder, index_left_shoulder_doc);
+  stamper_cross_section.def_readwrite("index_left_shoulder", 
+    &xms::XmStampCrossSection::m_idxLeftShoulder, index_left_shoulder_doc);
   // ---------------------------------------------------------------------------
   // property: right
   // ---------------------------------------------------------------------------
@@ -449,16 +449,16 @@ void initXmStamperIo(py::module &m)
   const char* right_max_doc = R"pydoc(
       Max x value for right side.
   )pydoc";
-  stamper_cross_section.def_readwrite("right_max", &xms::XmStampCrossSection::m_rightMax,
-    right_max_doc);
+  stamper_cross_section.def_readwrite("right_max", 
+    &xms::XmStampCrossSection::m_rightMax, right_max_doc);
   // ---------------------------------------------------------------------------
   // property: index_right_shoulder
   // ---------------------------------------------------------------------------
   const char* index_right_shoulder_doc = R"pydoc(
       Index to the shoulder point in the right point list.
   )pydoc";
-  stamper_cross_section.def_readwrite("index_right_shoulder", &xms::XmStampCrossSection::
-    m_idxRightShoulder, index_right_shoulder_doc);
+  stamper_cross_section.def_readwrite("index_right_shoulder", 
+    &xms::XmStampCrossSection::m_idxRightShoulder, index_right_shoulder_doc);
 
 
 
