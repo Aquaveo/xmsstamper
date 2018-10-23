@@ -215,7 +215,7 @@ void initXmStamperIo(py::module &m)
 // XMSTAMPRASTERENUM
 // -----------------------------------------------------------------------------
   py::enum_<xms::XmStampRaster::XmRasterFormatEnum>(stamp_raster, 
-         "raster_format_enum", "weight_enum for InterpIdw class")
+        "raster_format_enum", "weight_enum for InterpIdw class")
     .value("RS_ARCINFO_ASCII", 
                  xms::XmStampRaster::XmRasterFormatEnum::RS_ARCINFO_ASCII)
     .export_values();
@@ -223,14 +223,17 @@ void initXmStamperIo(py::module &m)
 // -----------------------------------------------------------------------------
 // XMWINGWALL
 // -----------------------------------------------------------------------------
+  const char* xm_wing_wall_doc = R"pydoc(
+      Class for wing wall definition for feature stamp end cap.
+  )pydoc";
   py::class_<xms::XmWingWall, boost::shared_ptr<xms::XmWingWall>> 
-    stamper_wing_wall(m, "XmWingWall");
+    stamper_wing_wall(m, "XmWingWall",xm_wing_wall_doc);
   stamper_wing_wall.def(py::init<>());
   // ---------------------------------------------------------------------------
   // property: wing_wall_angle
   // ---------------------------------------------------------------------------
   const char* wing_wall_angle_doc = R"pydoc(
-       Degrees from 0 to 60.
+      Degrees from 0 to 60.
   )pydoc";
   stamper_wing_wall.def_readwrite("wing_wall_angle", 
              &xms::XmWingWall::m_wingWallAngle, wing_wall_angle_doc);
@@ -243,14 +246,17 @@ void initXmStamperIo(py::module &m)
 // -----------------------------------------------------------------------------
 // XMSLOPEDABUTMENT
 // -----------------------------------------------------------------------------
+  const char* xm_sloped_abutment_doc = R"pydoc(
+      Abutment definition for feature stamp end cap.
+  )pydoc";
   py::class_<xms::XmSlopedAbutment, boost::shared_ptr<xms::XmSlopedAbutment>>
-    stamper_sloped_abutment(m, "XmSlopedAbutment");
+    stamper_sloped_abutment(m, "XmSlopedAbutment",xm_sloped_abutment_doc);
   stamper_sloped_abutment.def(py::init<>());
   // ---------------------------------------------------------------------------
   // property: max_x
   // ---------------------------------------------------------------------------
   const char* max_x_doc = R"pydoc(
-       Max distance from center line.
+      Max distance from center line.
   )pydoc";
   stamper_sloped_abutment.def_readwrite("max_x", 
     &xms::XmSlopedAbutment::m_maxX, max_x_doc);
@@ -280,14 +286,17 @@ void initXmStamperIo(py::module &m)
 // -----------------------------------------------------------------------------
 // XMGUIDEBANK
 // -----------------------------------------------------------------------------
+  const char* xm_guide_bank_doc = R"pydoc(
+      Guidebank definition for feature stamp end cap.
+  )pydoc";
   py::class_<xms::XmGuidebank, boost::shared_ptr<xms::XmGuidebank>>
-    stamper_guide_bank(m, "XmGuidebank");
+    stamper_guide_bank(m, "XmGuidebank",xm_guide_bank_doc);
   stamper_guide_bank.def(py::init<>());
   // ---------------------------------------------------------------------------
   // property: side
   // ---------------------------------------------------------------------------
   const char* side_doc = R"pydoc(
-       Position of guidebank relative to center line, 0-left, 1-right.
+      Position of guidebank relative to center line, 0-left, 1-right.
   )pydoc";
   stamper_guide_bank.def_readwrite("side",
     &xms::XmGuidebank::m_side, side_doc);
@@ -295,7 +304,7 @@ void initXmStamperIo(py::module &m)
   // property: radius1
   // ---------------------------------------------------------------------------
   const char* radius1_doc = R"pydoc(
-       First radius (R1) for guidebank creation.
+      First radius (R1) for guidebank creation.
   )pydoc";
   stamper_guide_bank.def_readwrite("radius1",
     &xms::XmGuidebank::m_radius1, radius1_doc);
@@ -303,7 +312,7 @@ void initXmStamperIo(py::module &m)
   // property: m_radius2
   // ---------------------------------------------------------------------------
   const char* radius2_doc = R"pydoc(
-       Second radius (R2) for guidebank creation.
+      Second radius (R2) for guidebank creation.
   )pydoc";
   stamper_guide_bank.def_readwrite("radius2",
     &xms::XmGuidebank::m_radius2, radius2_doc);
@@ -311,7 +320,7 @@ void initXmStamperIo(py::module &m)
   // property: m_width
   // ---------------------------------------------------------------------------
   const char* width_doc = R"pydoc(
-       Width of guidebank about the center line.
+      Width of guidebank about the center line.
   )pydoc";
   stamper_guide_bank.def_readwrite("width",
     &xms::XmGuidebank::m_width, width_doc);
@@ -319,7 +328,7 @@ void initXmStamperIo(py::module &m)
   // property: n_pts
   // ---------------------------------------------------------------------------
   const char* n_pts_doc = R"pydoc(
-       n_pts of guidebank about the center line.
+      n_pts of guidebank about the center line.
   )pydoc";
   stamper_guide_bank.def_readwrite("n_pts",
     &xms::XmGuidebank::m_nPts, n_pts_doc);
@@ -336,14 +345,17 @@ void initXmStamperIo(py::module &m)
 // -----------------------------------------------------------------------------
 // XMSTAMPERENDCAP
 // -----------------------------------------------------------------------------
+  const char* xm_stamper_end_cap = R"pydoc(
+      End cap definition for feature stamp.
+  )pydoc";
   py::class_<xms::XmStamperEndCap, boost::shared_ptr<xms::XmStamperEndCap>>
-    stamper_end_cap(m, "XmStamperEndCap");
+    stamper_end_cap(m, "XmStamperEndCap",xm_stamper_end_cap);
   stamper_end_cap.def(py::init<>());
   // ---------------------------------------------------------------------------
   // property: type
   // ---------------------------------------------------------------------------
   const char* type_doc = R"pydoc(
-       Type of end cap: 0- guidebank, 1- sloped abutment, 2- wing wall.
+      Type of end cap: 0- guidebank, 1- sloped abutment, 2- wing wall.
   )pydoc";
   stamper_end_cap.def_readwrite("type",
     &xms::XmStamperEndCap::m_type, type_doc);
@@ -351,7 +363,7 @@ void initXmStamperIo(py::module &m)
   // property: angle
   // ---------------------------------------------------------------------------
   const char* angle_doc = R"pydoc(
-       Degrees from -45 to 45.
+      Degrees from -45 to 45.
   )pydoc";
   stamper_end_cap.def_readwrite("angle",
     &xms::XmStamperEndCap::m_angle, angle_doc);
@@ -359,7 +371,7 @@ void initXmStamperIo(py::module &m)
   // property: guidebank
   // ---------------------------------------------------------------------------
   const char* guidebank_doc = R"pydoc(
-       Guidebank definition.
+      Guidebank definition.
   )pydoc";
   stamper_end_cap.def_readwrite("guidebank",
     &xms::XmStamperEndCap::m_guidebank, guidebank_doc);
@@ -367,7 +379,7 @@ void initXmStamperIo(py::module &m)
   // property: sloped_abutment
   // ---------------------------------------------------------------------------
   const char* sloped_abutment_doc = R"pydoc(
-       Sloped abutment definition.
+      Sloped abutment definition.
   )pydoc";
   stamper_end_cap.def_readwrite("sloped_abutment",
     &xms::XmStamperEndCap::m_slopedAbutment, sloped_abutment_doc);
@@ -375,7 +387,7 @@ void initXmStamperIo(py::module &m)
   // property: wing_wall
   // ---------------------------------------------------------------------------
   const char* wing_wall_doc = R"pydoc(
-       Wing wall definition.
+      Wing wall definition.
   )pydoc";
   stamper_end_cap.def_readwrite("wing_wall",
     &xms::XmStamperEndCap::m_wingWall, wing_wall_doc);
@@ -389,9 +401,12 @@ void initXmStamperIo(py::module &m)
 // -----------------------------------------------------------------------------
 // XMSTAMPCROSSSECTION
 // -----------------------------------------------------------------------------
+  const char* xm_stamp_cross_section_doc = R"pydoc(
+      Cross section definition for stamping
+  )pydoc";
   py::class_<xms::XmStampCrossSection, 
     boost::shared_ptr<xms::XmStampCrossSection>> 
-    stamper_cross_section(m, "XmStampCrossSection");
+    stamper_cross_section(m, "XmStampCrossSection",xm_stamp_cross_section_doc);
   stamper_cross_section.def(py::init<>());
   // ---------------------------------------------------------------------------
   // property: left
@@ -465,9 +480,14 @@ void initXmStamperIo(py::module &m)
 // -----------------------------------------------------------------------------
 // XMSTAMPERCENTERLINEPROFILE
 // -----------------------------------------------------------------------------
+  const char* xm_stamper_center_line_profile_doc = R"pydoc(
+      Cross section for stamping using distance rather than polyline 
+      index
+  )pydoc";
   py::class_<xms::XmStamperCenterlineProfile, 
     boost::shared_ptr<xms::XmStamperCenterlineProfile>> 
-    stamper_centerline_profile(m, "XmStamperCenterlineProfile");
+    stamper_centerline_profile(m, "XmStamperCenterlineProfile",
+    xm_stamper_center_line_profile_doc);
   stamper_centerline_profile.def(py::init<>());
   // ---------------------------------------------------------------------------
   // property: distance
@@ -535,8 +555,11 @@ void initXmStamperIo(py::module &m)
 // -----------------------------------------------------------------------------
 // XMSTAMPERIO
 // -----------------------------------------------------------------------------
+  const char* xm_stamper_io_doc = R"pydoc(
+      Center line for stamping inputs/outputs class.
+  )pydoc";
   py::class_<xms::XmStamperIo, boost::shared_ptr<xms::XmStamperIo>> 
-    stamper_io(m, "XmStamperIo");
+    stamper_io(m, "XmStamperIo",xm_stamper_io_doc);
   stamper_io.def(py::init<>());
   // ---------------------------------------------------------------------------
   // property: centerline

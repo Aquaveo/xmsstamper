@@ -57,8 +57,8 @@ void initXmStamper(py::module &m)
 
       Args:
           stamper_io (XmStamperIo): The stamping input/output class.
-          profile (XmStamperCenterlineProfile): The stamping centerline profile 
-            class.
+          profile (XmStamperCenterlineProfile): The stamping centerline profile
+              class.
   )pydoc";
 
   stamper.def("fill_stamper_io_from_centerline_profile",
