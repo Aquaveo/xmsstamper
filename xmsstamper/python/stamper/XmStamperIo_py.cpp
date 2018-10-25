@@ -116,6 +116,7 @@ void initXmStamperIo(py::module &m)
       
       Args:
           col (int): The zero-based column index for the raster.
+
           row (int): The zero-based row index for the raster.
 
       Returns:
@@ -168,6 +169,7 @@ void initXmStamperIo(py::module &m)
       
       Args:
          file_name (str): The output raster filename.
+
          format (raster_format_enum): The output raster format.
   )pydoc";
   stamp_raster.def("write_grid_file",
@@ -198,6 +200,7 @@ void initXmStamperIo(py::module &m)
       
       Args:
          file_name (str): The input file.
+
          card_name (str): The card name to be written to the output file.
   )pydoc";
   stamp_raster.def("write_to_file",
@@ -713,6 +716,7 @@ void initXmStamperIo(py::module &m)
       
       Args:
          file_name (str): The input file.
+
          card_name (str): The card name to be written to the output file.
   )pydoc";
   stamper_io.def("write_to_file",
