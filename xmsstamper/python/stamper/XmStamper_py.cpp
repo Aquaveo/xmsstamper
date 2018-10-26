@@ -38,9 +38,7 @@ void initXmStamper(py::module &m)
       Performs the feature stamping operation.
 
       Args:
-          stamper_io (XmStamperIo): The stamping input/output class. When 
-            sucessful, the out_tin and out_breaklines members of stamper_io are 
-            filled by this method.
+        stamper_io (XmStamperIo): The stamping input/output class. When sucessful, the out_tin and out_breaklines members of stamper_io are filled by this method.
   )pydoc";
   stamper.def("do_stamp",
   [](xms::XmStamper &self, xms::XmStamperIo &stamper_io)
@@ -56,9 +54,9 @@ void initXmStamper(py::module &m)
       Converts XmStamperCenterlineProfile class to XmStamperIo class inputs.
 
       Args:
-          stamper_io (XmStamperIo): The stamping input/output class.
-          profile (XmStamperCenterlineProfile): The stamping centerline profile 
-            class.
+        stamper_io (XmStamperIo): The stamping input/output class.
+
+        profile (XmStamperCenterlineProfile): The stamping centerline profile class
   )pydoc";
 
   stamper.def("fill_stamper_io_from_centerline_profile",

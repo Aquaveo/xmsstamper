@@ -6,18 +6,20 @@ Modules
 
 These are the modules currently exposed to python from the xmsstamper library
 
-Stamper
+stamper
 =======
 
 .. automodule:: xmsstamper_py.stamper
-
-.. note::
-   
-    Description of the stamper module is coming soon!
 
 .. toctree::
    :maxdepth: 1
    
    modules/stamper/XmStamper
-   modules/stamper/XmStamperIo
-
+   modules/stamper/XmStamperIo.rst
+   modules/stamper/XmStampRaster
+   modules/stamper/XmGuidebank
+   modules/stamper/XmSlopedAbutment
+   modules/stamper/XmStampCrossSection
+   modules/stamper/XmStamperCenterlineProfile
+   modules/stamper/XmStamperEndCap
+   modules/stamper/XmWingWall
