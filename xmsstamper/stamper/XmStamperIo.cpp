@@ -3,8 +3,7 @@
 /// \ingroup stamping
 /// \brief Implements data classes in XmStamperIo.h
 //
-/// \copyright (C) Copyright Aquaveo 2018. Distributed under FreeBSD License
-/// (See accompanying file LICENSE or https://aqaveo.com/bsd/license.txt)
+/// \copyright (C) Copyright Aquaveo 2018.
 //------------------------------------------------------------------------------
 
 //----- Included files ---------------------------------------------------------
@@ -409,7 +408,7 @@ void XmStampRaster::WriteToFile(std::ofstream &a_file, const std::string &a_card
   a_file << "NODATA " << m_noData;
 } // XmStampRaster::WriteToFile
 //------------------------------------------------------------------------------
-/// \brief Reads the XmStampRaster class information to a file.
+/// \brief Reads the XmStampRaster class information from a file.
 /// \param[in] a_file: The input file.
 /// \return true if file read is successful. false if errors encountered.
 //------------------------------------------------------------------------------
