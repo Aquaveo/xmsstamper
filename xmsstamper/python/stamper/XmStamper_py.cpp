@@ -20,7 +20,7 @@ namespace py = pybind11;
 //----- Python Interface -------------------------------------------------------
 PYBIND11_DECLARE_HOLDER_TYPE(T, boost::shared_ptr<T>);
 
-void initXmStamper(py::module &m)
+void initXmStamperClass(py::module &m)
 {
   py::class_<xms::XmStamper, boost::shared_ptr<xms::XmStamper>> stamper(m, "Stamper");
   stamper.def(py::init(&xms::XmStamper::New));
@@ -126,3 +126,43 @@ void initXmStamper(py::module &m)
   },
   set_observer_doc);
 }
+
+void initXmStamperModule(py::module &m)
+{
+    py::module modStamper = m.def_submodule("stamper");
+
+    // -------------------------------------------------------------------------------------------
+    // function: stamp
+    // -------------------------------------------------------------------------------------------
+    const char* stamp_doc = R"pydoc(
+        Performs the feature stamping operation
+
+        Args:
+            stamper_io (XmStamperIo): The stamping input/output class. When sucessful, the out_tin and out_breaklines members of stamper_io and filled by this method.
+    )pydoc";
+    modStamper.def("stamp",
+        [](xms::XmStamperIo &stamper_io) {
+            boost::shared_ptr<xms::XmStamper> stamper = xms::XmStamper::New();
+            stamper->DoStamp(stamper_io);
+        }, stamp_doc, py::arg("stamper_io")
+    );
+
+    // -------------------------------------------------------------------------------------------
+    // function: fill_stamper_io_from_centerline_profile
+    // -------------------------------------------------------------------------------------------
+    const char* fill_stamper_io_from_centerline_profile_doc = R"pydoc(
+        Converts XmStamperCenterlineProfile class to XmStamperIo class inputs
+
+        Args:
+            stamper_io (XmStamperIo): The stamping input/output class
+            profile (XmStamperCenterlineProfile): The stamping centerline profile class
+    )pydoc";
+    modStamper.def("fill_stamper_io_from_centerline_profile",
+        [](xms::XmStamperIo &stamper_io, xms::XmStamperCenterlineProfile& profile)
+        {
+          boost::shared_ptr<xms::XmStamper> stamper = xms::XmStamper::New();
+          stamper->FillStamperIoFromCenterlineProfile(stamper_io, profile);
+        }, fill_stamper_io_from_centerline_profile_doc, py::arg("stamper_io"), py::arg("profile")
+    );
+}
+

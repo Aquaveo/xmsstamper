@@ -25,7 +25,8 @@ namespace xms {
 void initStamper(py::module &);
 
 //----- Function declarations --------------------------------------------------
-void initXmStamper(py::module &);
+void initXmStamperClass(py::module &);
+void initXmStamperModule(py::module &);
 void initXmStamperIo(py::module &);
 
 

@@ -22,7 +22,8 @@ namespace py = pybind11;
 //----- Python Interface -------------------------------------------------------
 
 void initStamper(py::module &m) {
-  initXmStamper(m);
+  initXmStamperClass(m);
+  initXmStamperModule(m);
   initXmStamperIo(m);
 }
 //------------------------------------------------------------------------------

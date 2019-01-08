@@ -9,7 +9,7 @@ from conans.errors import ConanException
 class XmsstamperConan(ConanFile):
     """XMSStamper Conanfile"""
     name = "xmsstamper"
-    version = None
+    # version = None  # This doesn't work with the new version of conan
     license = "FreeBSD Software License"
     url = "https://github.com/Aquaveo/xmsstamper"
     description = "Stamping library for XMS products"
