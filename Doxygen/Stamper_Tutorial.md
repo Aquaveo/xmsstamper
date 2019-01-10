@@ -2,9 +2,9 @@
 # Stamper Tutorial {#Stamper_Tutorial}
 
 ## Introduction {#Intro_Stamper}
-The purpose of this tutorial is to provide explanation on how to use the classes defined in xmsng to perform feature stamping. The examples provided in this tutorial refer to test cases that are in the xmsng/tutorial/TutStamping.cpp source file.
+The purpose of this tutorial is to provide explanation on how to use the classes defined in this library to perform feature stamping. The examples provided in this tutorial refer to test cases that are in the /tutorial/TutStamping.cpp source file.
 
-The xmsng library contains classes for performing feature stamping. The basic idea is to associate cross sections with a center line to produce a new feature (a "fill" embankment, a "cut" channel). The output from the feature stamp is a TIN and a set of break lines defining distinct characteristics of the new feature, such as the center line, shoulder, toe, and end cap. 
+The library contains classes for performing feature stamping. The basic idea is to associate cross sections with a center line to produce a new feature (a "fill" embankment, a "cut" channel). The output from the feature stamp is a TIN and a set of break lines defining distinct characteristics of the new feature, such as the center line, shoulder, toe, and end cap. 
 
 The xms::StStamperIo class is used to set up the inputs to the stamp operation and it also contains the outputs of the operation in the member variables m_outTin and m_outBreakLines;
 

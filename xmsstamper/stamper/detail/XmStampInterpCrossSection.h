@@ -27,7 +27,6 @@ namespace xms
 //----- Structs / Classes ------------------------------------------------------
 class XmStampCrossSection;
 class XmStamperIo;
-class XmStamperCenterlineProfile;
 class Observer;
 
 //----- Function prototypes ----------------------------------------------------
@@ -50,8 +49,6 @@ public:
                         XmStampCrossSection& a_next,
                         double a_percent,
                         XmStampCrossSection& a_cs) = 0;
-  virtual void InterpFromCenterlineProfile(XmStamperIo& a_io,
-                                           XmStamperCenterlineProfile& a_profile) = 0;
 
 private:
   XM_DISALLOW_COPY_AND_ASSIGN(XmStampInterpCrossSection);

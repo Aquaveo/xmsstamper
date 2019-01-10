@@ -25,7 +25,6 @@ class XmStampInterpCrossSectionUnitTests : public CxxTest::TestSuite
 public:
   void test0();
   void test1();
-  void testInterpFromCenterlineProfile0();
   void testCrossSectionTutorial();
 }; // XmStampInterpCrossSectionUnitTests
 

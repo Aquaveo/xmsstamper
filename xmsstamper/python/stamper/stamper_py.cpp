@@ -22,7 +22,6 @@ namespace py = pybind11;
 //----- Python Interface -------------------------------------------------------
 
 void initStamper(py::module &m) {
-  initXmStamperClass(m);
   initXmStamperModule(m);
   initXmStamperIo(m);
 }
@@ -51,7 +50,7 @@ std::string PyReprStringFromXmStampRaster(const xms::XmStampRaster& a_stampRaste
 std::string PyReprStringFromXmWingWall(const xms::XmWingWall& a_wingWall)
 {
   std::stringstream ss;
-  ss << "wing_wall_angle: " << a_wingWall.m_wingWallAngle;
+  ss << "  wing_wall_angle: " << a_wingWall.m_wingWallAngle;
   return ss.str();
 } // PyReprStringFromXmWingWall
 //------------------------------------------------------------------------------
@@ -62,8 +61,8 @@ std::string PyReprStringFromXmWingWall(const xms::XmWingWall& a_wingWall)
 std::string PyReprStringFromXmSlopedAbutment(const xms::XmSlopedAbutment& a_slopedAbutment)
 {
   std::stringstream ss;
-  ss << "max_x: " << xms::STRstd(a_slopedAbutment.m_maxX) << "\n";
-  ss << "slope: \n" << xms::StringFromVecPt3d(a_slopedAbutment.m_slope);
+  ss << "  max_x: " << xms::STRstd(a_slopedAbutment.m_maxX) << "\n";
+  ss << "  slope: \n" << xms::StringFromVecPt3d(a_slopedAbutment.m_slope);
   return ss.str();
 } // PyReprStringFromXmSlopedAbutment
 //------------------------------------------------------------------------------
@@ -74,11 +73,11 @@ std::string PyReprStringFromXmSlopedAbutment(const xms::XmSlopedAbutment& a_slop
 std::string PyReprStringFromXmGuidebank(const xms::XmGuidebank& a_guideBank)
 {
   std::stringstream ss;
-  ss << "side: " << xms::STRstd(a_guideBank.m_side) << "\n";
-  ss << "radius1: " << xms::STRstd(a_guideBank.m_radius1) << "\n";
-  ss << "radius2: " << xms::STRstd(a_guideBank.m_radius2) << "\n";
-  ss << "width: " << xms::STRstd(a_guideBank.m_width) << "\n";
-  ss << "n_pts: " << a_guideBank.m_nPts;
+  ss << "  side: " << xms::STRstd(a_guideBank.m_side) << "\n";
+  ss << "  radius1: " << xms::STRstd(a_guideBank.m_radius1) << "\n";
+  ss << "  radius2: " << xms::STRstd(a_guideBank.m_radius2) << "\n";
+  ss << "  width: " << xms::STRstd(a_guideBank.m_width) << "\n";
+  ss << "  n_pts: " << a_guideBank.m_nPts;
   return ss.str();
 } // PyReprStringFromXmGuidebank
 //------------------------------------------------------------------------------
@@ -89,11 +88,23 @@ std::string PyReprStringFromXmGuidebank(const xms::XmGuidebank& a_guideBank)
 std::string PyReprStringFromXmStamperEndCap(const xms::XmStamperEndCap& a_endCap)
 {
   std::stringstream ss;
-  ss << "type: " << a_endCap.m_type << "\n";
+
+  std::string endcap_type("unknown");
+  if (a_endCap.m_type == 0)
+    endcap_type = "guidebank";
+  else if (a_endCap.m_type == 1)
+    endcap_type = "sloped_abutment";
+  else if (a_endCap.m_type == 2)
+    endcap_type = "wing_wall";
+
+  ss << "type: " << endcap_type << "\n";
   ss << "angle: " << xms::STRstd(a_endCap.m_angle) << "\n";
-  ss << "guidebank: \n" << PyReprStringFromXmGuidebank(a_endCap.m_guidebank) << "\n";
-  ss << "sloped_abutment: \n" << PyReprStringFromXmSlopedAbutment(a_endCap.m_slopedAbutment) << "\n";
-  ss << "wing_wall: \n" << PyReprStringFromXmWingWall(a_endCap.m_wingWall);
+  if (a_endCap.m_type == 0)
+    ss << "guidebank: \n" << PyReprStringFromXmGuidebank(a_endCap.m_guidebank) << "\n";
+  else if (a_endCap.m_type == 1)
+    ss << "sloped_abutment: \n" << PyReprStringFromXmSlopedAbutment(a_endCap.m_slopedAbutment) << "\n";
+  else if (a_endCap.m_type == 2)
+    ss << "wing_wall: \n" << PyReprStringFromXmWingWall(a_endCap.m_wingWall);
   return ss.str();
 } // PyReprStringFromXmStamperEndCap
 //------------------------------------------------------------------------------
@@ -113,23 +124,6 @@ std::string PyReprStringFromXmStampCrossSection(const xms::XmStampCrossSection& 
   return ss.str();
 } // PyReprStringFromXmStampCrossSection
 //------------------------------------------------------------------------------
-/// \brief Create string from XmStamperCenterlineProfile
-/// \param[in] a_stampCenterlineProfile: XmStamperCenterlineProfile object
-/// \return a string
-//------------------------------------------------------------------------------
-std::string PyReprStringFromXmStamperCenterlineProfile(const xms::XmStamperCenterlineProfile& a_stampCenterlineProfile)
-{
-  std::stringstream ss;
-  ss << "distance: " << StringFromVecDbl(a_stampCenterlineProfile.m_distance) << "\n";
-  ss << "elevation: " << StringFromVecDbl(a_stampCenterlineProfile.m_elevation) << "\n";
-  for (int i = 0; i < a_stampCenterlineProfile.m_cs.size(); ++i)
-  {
-    ss << "Cross Section #" << i + 1 << ":\n";
-    ss << PyReprStringFromXmStampCrossSection(a_stampCenterlineProfile.m_cs[i]) << "\n";
-  }
-  return ss.str();
-} // PyReprStringFromXmStamperCenterlineProfile
-//------------------------------------------------------------------------------
 /// \brief Create string from XmStamperIo
 /// \param[in] a_stamperIo: XmStamperIo object
 /// \return a string
@@ -137,8 +131,17 @@ std::string PyReprStringFromXmStamperCenterlineProfile(const xms::XmStamperCente
 std::string PyReprStringFromXmStamperIo(const xms::XmStamperIo& a_stamperIo)
 {
   std::stringstream ss;
+
+  std::string stamping_type("unknown");
+  if (a_stamperIo.m_stampingType == 0)
+    stamping_type = "cut";
+  else if (a_stamperIo.m_stampingType == 1)
+    stamping_type = "fill";
+  else if (a_stamperIo.m_stampingType == 2)
+    stamping_type = "both";
+
   ss << "center_line: \n" << xms::StringFromVecPt3d(a_stamperIo.m_centerLine);
-  ss << "stamping_type: " << a_stamperIo.m_stampingType << "\n";
+  ss << "stamping_type: " << stamping_type << "\n";
   for (int i = 0; i < a_stamperIo.m_cs.size(); ++i)
   {
     ss << "Cross Section #" << i + 1 << ":\n";

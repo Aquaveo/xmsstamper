@@ -18,14 +18,12 @@ namespace xms {
   class XmGuidebank;
   class XmStamperEndCap;
   class XmStampCrossSection;
-  class XmStamperCenterlineProfile;
   class XmStamperIo;
 }
 
 void initStamper(py::module &);
 
 //----- Function declarations --------------------------------------------------
-void initXmStamperClass(py::module &);
 void initXmStamperModule(py::module &);
 void initXmStamperIo(py::module &);
 
@@ -36,7 +34,6 @@ std::string PyReprStringFromXmSlopedAbutment(const xms::XmSlopedAbutment& a_slop
 std::string PyReprStringFromXmGuidebank(const xms::XmGuidebank& a_guideBank);
 std::string PyReprStringFromXmStamperEndCap(const xms::XmStamperEndCap& a_endCap);
 std::string PyReprStringFromXmStampCrossSection(const xms::XmStampCrossSection& a_stampCrossSection);
-std::string PyReprStringFromXmStamperCenterlineProfile(const xms::XmStamperCenterlineProfile& a_stampCenterlineProfile);
 std::string PyReprStringFromXmStamperIo(const xms::XmStamperIo& a_stamperIo);
 
 

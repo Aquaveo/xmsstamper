@@ -27,7 +27,6 @@ namespace xms
 
 //----- Structs / Classes ------------------------------------------------------
 class XmStamperIo;
-class XmStamperCenterlineProfile;
 class Observer;
 
 //----- Function prototypes ----------------------------------------------------
@@ -45,8 +44,6 @@ public:
   virtual ~XmStamper();
   /// \cond
   virtual void DoStamp(XmStamperIo& a_) = 0;
-  virtual void FillStamperIoFromCenterlineProfile(XmStamperIo& a_io,
-                                                  XmStamperCenterlineProfile& a_profile) = 0;
 
   virtual const VecPt3d& GetPoints() = 0;
   virtual const VecInt2d& GetSegments() = 0;

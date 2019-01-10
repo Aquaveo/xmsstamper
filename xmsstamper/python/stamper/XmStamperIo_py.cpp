@@ -26,6 +26,99 @@
 //----- Namespace declaration --------------------------------------------------
 namespace py = pybind11;
 
+//----- Internal functions -----------------------------------------------------
+namespace {
+
+// -----------------------------------------------------------------------------
+/// \brief converts string to an int. This will throw if the string is not recognized.
+/// \param[in] a_: string to be converted to an enum
+/// \return int representing the endcap: 0-guidebank, 1-sloped_abutment, 2-wing_wall
+// -----------------------------------------------------------------------------
+int EndCapTypeFromString(const std::string& a_endcap_type)
+{
+  int endcap_type(0);
+  if (a_endcap_type == "guidebank")
+    endcap_type = 0;
+  else if (a_endcap_type == "sloped_abutment")
+    endcap_type = 1;
+  else if (a_endcap_type == "wing_wall")
+    endcap_type = 2;
+  else
+  {
+    std::string msg = "endcap_type string must be one of 'guidebank', 'sloped_abutment', "
+                      "'wing_wall' not " + a_endcap_type;
+    throw py::value_error(msg);
+  }
+  return endcap_type;
+} // EndCapTypeFromString
+// -----------------------------------------------------------------------------
+/// \brief converts int to an String..
+/// \param[in] a_: int to be converted to an string
+/// \return string representing the endcap: 0-guidebank, 1-sloped_abutment, 2-wing_wall
+// -----------------------------------------------------------------------------
+std::string EndCapTypeToString(const int& a_endcap_type)
+{
+  std::string endcap_type("unknown");
+  if (a_endcap_type == 0)
+    endcap_type = "guidebank";
+  else if (a_endcap_type == 1)
+    endcap_type = "sloped_abutment";
+  else if (a_endcap_type == 2)
+    endcap_type = "wing_wall";
+  return endcap_type;
+} // EndCapTypeToString
+
+
+
+
+// -----------------------------------------------------------------------------
+/// \brief converts string to an int. This will throw if the string is not recognized.
+/// \param[in] a_: string to be converted to an enum
+/// \return int representing the endcap: 0-guidebank, 1-sloped_abutment, 2-wing_wall
+// -----------------------------------------------------------------------------
+int StampingTypeFromString(const std::string& a_stamping_type)
+{
+  int stamping_type(0);
+  if (a_stamping_type == "cut")
+    stamping_type = 0;
+  else if (a_stamping_type == "fill")
+    stamping_type = 1;
+  else if (a_stamping_type == "both")
+    stamping_type = 2;
+  else
+  {
+    std::string msg = "stamping_type string must be one of 'cut', 'fill', "
+                      "'both' not " + a_stamping_type;
+    throw py::value_error(msg);
+  }
+  return stamping_type;
+} // StampingTypeFromString
+// -----------------------------------------------------------------------------
+/// \brief converts string to an int. This will throw if the string is not recognized.
+/// \param[in] a_: string to be converted to an enum
+/// \return int representing the endcap: 0-guidebank, 1-sloped_abutment, 2-wing_wall
+// -----------------------------------------------------------------------------
+std::string StampingTypeToString(const int& a_stamping_type)
+{
+  std::string stamping_type("unknown");
+  if (a_stamping_type == 0)
+    stamping_type = "cut";
+  else if (a_stamping_type == 1)
+    stamping_type = "fill";
+  else if (a_stamping_type == 2)
+    stamping_type = "both";
+  return stamping_type;
+} // StampingTypeToString
+
+
+
+
+
+
+} // unnamed namespace
+
+
+
 //----- Python Interface -------------------------------------------------------
 PYBIND11_DECLARE_HOLDER_TYPE(T, boost::shared_ptr<T>);
 
@@ -501,15 +594,54 @@ void initXmStamperIo(py::module &m)
 // -----------------------------------------------------------------------------
   py::class_<xms::XmStamperEndCap, boost::shared_ptr<xms::XmStamperEndCap>>
     stamper_end_cap(m, "StamperEndCap");
-  stamper_end_cap.def(py::init<>());
+
+  stamper_end_cap.def(py::init<>(
+  [](std::string endcap_type, double angle, py::object guidebank,
+     py::object sloped_abutment, py::object wing_wall) {
+    boost::shared_ptr<xms::XmStamperEndCap> rval(new xms::XmStamperEndCap);
+    rval->m_angle = angle;
+    if (!guidebank.is_none())
+    {
+      rval->m_guidebank = py::cast<xms::XmGuidebank>(guidebank);
+      rval->m_type = EndCapTypeFromString("guidebank");
+    }
+    else if (!sloped_abutment.is_none())
+    {
+      rval->m_slopedAbutment = py::cast<xms::XmSlopedAbutment>(sloped_abutment);
+      rval->m_type = EndCapTypeFromString("sloped_abutment");
+    }
+    else if (!wing_wall.is_none())
+    {
+      rval->m_wingWall = py::cast<xms::XmWingWall>(wing_wall);
+      rval->m_type = EndCapTypeFromString("wing_wall");
+    }
+    else
+    {
+      if (endcap_type.empty())
+      {
+        endcap_type = "wing_wall";
+      }
+      rval->m_type = EndCapTypeFromString(endcap_type);
+    }
+    return rval;
+  }
+  ), py::arg("endcap_type") = "", py::arg("angle") = 0,
+     py::arg("guidebank") = py::none(), py::arg("sloped_abutment") = py::none(),
+     py::arg("wing_wall") = py::none());
   // ---------------------------------------------------------------------------
   // property: type
   // ---------------------------------------------------------------------------
-  const char* type_doc = R"pydoc(
-       Type of end cap: 0- guidebank, 1- sloped abutment, 2- wing wall
+  const char* endcap_type_doc = R"pydoc(
+       Type of end cap: guidebank, sloped_abutment, wing_wall
   )pydoc";
-  stamper_end_cap.def_readwrite("type",
-    &xms::XmStamperEndCap::m_type, type_doc);
+  stamper_end_cap.def_property("type",
+  [](xms::XmStamperEndCap &self) {
+      return EndCapTypeToString(self.m_type);
+  },
+  [](xms::XmStamperEndCap &self, std::string endcap_type) {
+      self.m_type = EndCapTypeFromString(endcap_type);
+  }
+  , endcap_type_doc);
   // ---------------------------------------------------------------------------
   // property: angle
   // ---------------------------------------------------------------------------
@@ -561,7 +693,21 @@ void initXmStamperIo(py::module &m)
   py::class_<xms::XmStampCrossSection, 
     boost::shared_ptr<xms::XmStampCrossSection>> 
     stamper_cross_section(m, "StampCrossSection");
-  stamper_cross_section.def(py::init<>());
+  stamper_cross_section.def(py::init<>(
+  [](py::iterable left, py::iterable right, float left_max, float right_max,
+     int index_left_shoulder, int index_right_shoulder) {
+      boost::shared_ptr<xms::XmStampCrossSection> rval(new xms::XmStampCrossSection);
+      rval->m_left = *xms::VecPt3dFromPyIter(left);
+      rval->m_right = *xms::VecPt3dFromPyIter(right);
+      rval->m_leftMax = left_max;
+      rval->m_rightMax = right_max;
+      rval->m_idxLeftShoulder = index_left_shoulder;
+      rval->m_idxRightShoulder = index_right_shoulder;
+      return rval;
+  }
+  ), py::arg("left"), py::arg("right"), py::arg("left_max") = 0.0,
+     py::arg("right_max") = 0.0, py::arg("index_left_shoulder") = 0,
+     py::arg("index_right_shoulder") = 0);
   // ---------------------------------------------------------------------------
   // property: left
   // ---------------------------------------------------------------------------
@@ -636,87 +782,52 @@ void initXmStamperIo(py::module &m)
   });
 
 // -----------------------------------------------------------------------------
-// XMSTAMPERCENTERLINEPROFILE
-// -----------------------------------------------------------------------------
-  py::class_<xms::XmStamperCenterlineProfile, 
-    boost::shared_ptr<xms::XmStamperCenterlineProfile>> 
-    stamper_centerline_profile(m, "StamperCenterlineProfile");
-  stamper_centerline_profile.def(py::init<>());
-  // ---------------------------------------------------------------------------
-  // property: distance
-  // ---------------------------------------------------------------------------
-  const char* distance_doc = R"pydoc(
-      Distance from start of polyline for cross section
-  )pydoc";
-  stamper_centerline_profile.def_property("distance",
-            [](xms::XmStamperCenterlineProfile &self) -> py::iterable
-            {
-                return xms::PyIterFromVecDbl(self.m_distance);
-            },
-            [](xms::XmStamperCenterlineProfile &self, py::iterable distance)
-            {
-                self.m_distance = *xms::VecDblFromPyIter(distance);
-            },
-            distance_doc
-        );
-  // ---------------------------------------------------------------------------
-  // property: elevation
-  // ---------------------------------------------------------------------------
-  const char* elevation_doc = R"pydoc(
-      Elevation at the cross section location
-  )pydoc";
-  stamper_centerline_profile.def_property("elevation",
-  [](xms::XmStamperCenterlineProfile &self) -> py::iterable
-  {
-      return xms::PyIterFromVecDbl(self.m_elevation);
-  },
-  [](xms::XmStamperCenterlineProfile &self, py::iterable elevation)
-  {
-      self.m_elevation = *xms::VecDblFromPyIter(elevation);
-  },
-  elevation_doc);
-  // ---------------------------------------------------------------------------
-  // function: cs
-  // ---------------------------------------------------------------------------
-  const char* cs_centerline_doc = R"pydoc(
-    Cross sections along the polyLine
-  )pydoc";
-  stamper_centerline_profile.def_property("cs",
-    [](xms::XmStamperCenterlineProfile &self) -> py::iterable
-  {
-    auto tuple_ret = py::tuple(self.m_cs.size());
-    for (size_t i = 0; i < tuple_ret.size(); i++) {
-      tuple_ret[i] = self.m_cs.at(i);
-    }
-    return tuple_ret;
-  },
-    [](xms::XmStamperCenterlineProfile &self, py::iterable& py_cs)
-  {
-    std::vector<xms::XmStampCrossSection> vec_cs;
-    vec_cs.resize(py::len(py_cs));
-    int i = 0;
-    for (auto item : py_cs)
-    {
-      auto cs = item;
-      vec_cs.at(i) = item.cast<xms::XmStampCrossSection>();
-      i++;
-    }
-    self.m_cs = vec_cs;
-  },
-  cs_centerline_doc);
-  // -------------------------------------------------------------------------
-  // function: __repr__
-  // -------------------------------------------------------------------------
-  stamper_centerline_profile.def("__repr__", [](xms::XmStamperCenterlineProfile &self) {
-    return PyReprStringFromXmStamperCenterlineProfile(self);
-  });
-
-// -----------------------------------------------------------------------------
 // XMSTAMPERIO
 // -----------------------------------------------------------------------------
   py::class_<xms::XmStamperIo, boost::shared_ptr<xms::XmStamperIo>> 
     stamper_io(m, "StamperIo");
-  stamper_io.def(py::init<>());
+  stamper_io.def(py::init<>(
+  [](py::iterable centerline, std::string stamping_type, py::iterable cs,
+     py::object first_end_cap, py::object last_end_cap,
+     py::object bathymetry, py::object raster) {
+    boost::shared_ptr<xms::XmStamperIo> rval(new xms::XmStamperIo);
+    rval->m_centerLine = *xms::VecPt3dFromPyIter(centerline);
+    rval->m_stampingType = StampingTypeFromString(stamping_type);
+    std::vector<xms::XmStampCrossSection> vec_cs;
+    vec_cs.resize(py::len(cs));
+    int i = 0;
+    for (auto item : cs)
+    {
+        if (!item.is_none())
+        {
+            vec_cs.at(i) = item.cast<xms::XmStampCrossSection>();
+        }
+        i++;
+    }
+    rval->m_cs = vec_cs;
+    if (!first_end_cap.is_none())
+    {
+      rval->m_firstEndCap= py::cast<xms::XmStamperEndCap>(first_end_cap);
+    }
+    if (!last_end_cap.is_none())
+    {
+      rval->m_lastEndCap= py::cast<xms::XmStamperEndCap>(last_end_cap);
+    }
+    if (!bathymetry.is_none())
+    {
+
+      rval->m_bathymetry = py::cast<boost::shared_ptr<xms::TrTin>>(bathymetry);
+    }
+    if (!raster.is_none())
+    {
+
+      rval->m_raster = py::cast<xms::XmStampRaster>(raster);
+    }
+    return rval;
+  }
+  ), py::arg("centerline"), py::arg("stamping_type"), py::arg("cs"),
+     py::arg("first_end_cap") = py::none(), py::arg("last_end_cap") = py::none(),
+     py::arg("bathymetry") = py::none(), py::arg("raster") = py::none());
   // ---------------------------------------------------------------------------
   // property: centerline
   // ---------------------------------------------------------------------------
@@ -739,7 +850,13 @@ void initXmStamperIo(py::module &m)
   const char* stamping_type_doc = R"pydoc(
       The stamping type.  0 - Cut, 1 - Fill
   )pydoc";
-  stamper_io.def_readwrite("stamping_type", &xms::XmStamperIo::m_stampingType,
+  stamper_io.def_property("stamping_type",
+    [](xms::XmStamperIo &self) {
+      return StampingTypeToString(self.m_stampingType);
+    },
+    [](xms::XmStamperIo &self, std::string stamping_type) {
+      self.m_stampingType = StampingTypeFromString(stamping_type);
+    },
     stamping_type_doc
   );
   // ---------------------------------------------------------------------------
@@ -790,7 +907,7 @@ void initXmStamperIo(py::module &m)
   stamper_io.def_readwrite("last_end_cap", &xms::XmStamperIo::m_lastEndCap,
     last_end_cap_doc);
   // ---------------------------------------------------------------------------
-  // property: last_end_cap
+  // property: raster
   // ---------------------------------------------------------------------------
   const char* raster_doc = R"pydoc(
       Input/output raster to stamp the resulting elevations onto this raster
@@ -834,14 +951,10 @@ void initXmStamperIo(py::module &m)
   const char* breaklines_doc = R"pydoc(
       Breaklines that are honored in the TIN
   )pydoc";
-  stamper_io.def_property("breaklines",
+  stamper_io.def_property_readonly("breaklines",
   [](xms::XmStamperIo &self) -> py::iterable
   {
     return xms::PyIterFromVecInt2d(self.m_outBreakLines);
-  },
-  [](xms::XmStamperIo &self, py::iterable breaklines)
-  {
-    self.m_outBreakLines = *xms::VecInt2dFromPyIter(breaklines);
   },
   breaklines_doc);
   // ---------------------------------------------------------------------------
@@ -876,7 +989,6 @@ void initXmStamperIo(py::module &m)
   stamper_io.def("write_to_file",
   [](xms::XmStamperIo &self, std::string file_name, std::string card_name)
   {
-    // TODO: This needs some error checking
     std::ofstream os;
     os.open(file_name, std::ios::out);
     self.WriteToFile(os, card_name);

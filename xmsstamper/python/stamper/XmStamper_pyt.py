@@ -3,6 +3,7 @@ import unittest
 import numpy as np
 import os
 import xmsstamper
+from xmsstamper.stamper import stamper
 import xmsinterp
 
 
@@ -43,48 +44,51 @@ class TestStamper(unittest.TestCase):
 
     def test_stamp_fill_embankment(self):
         """Test stamp fill embankment"""
-        io = xmsstamper.stamper.StamperIo()
-
         # Type and centerline
-        io.stamping_type = 1
-        io.centerline = ((0, 0, 15), (0, 10, 15))
+        io_stamping_type = "fill"
+        io_centerline = ((0, 0, 15), (0, 10, 15))
 
         # Cross sections
-        cs1 = xmsstamper.stamper.StampCrossSection()
-        cs1.left = ((0, 15), (5, 15), (6, 14))
-        cs1.left_max = 20
-        cs1.index_left_shoulder = 1
-        cs1.right = ((0, 15), (5, 15), (6, 14))
-        cs1.right_max = 20
-        cs1.index_right_shoulder = 1
-        cs2 = xmsstamper.stamper.StampCrossSection()
-        cs2.left = ((0, 15), (5, 15), (6, 14))
-        cs2.left_max = 20
-        cs2.index_left_shoulder = 1
-        cs2.right = ((0, 15), (5, 15), (6, 14))
-        cs2.right_max = 20
-        cs2.index_right_shoulder = 1
-        io.cs = (cs1, cs2)
+        left = right = ((0, 15), (5, 15), (6, 14))
+        left_max = right_max = 20
+        index_left_shoulder = index_right_shoulder = 1
+        cs1 = xmsstamper.stamper.StampCrossSection(
+            left=left,
+            right=right,
+            left_max=left_max,
+            right_max=right_max,
+            index_left_shoulder=index_left_shoulder,
+            index_right_shoulder=index_right_shoulder,
+        )
+        cs2 = xmsstamper.stamper.StampCrossSection(
+            left=left,
+            right=right,
+            left_max=left_max,
+            right_max=right_max,
+            index_left_shoulder=index_left_shoulder,
+            index_right_shoulder=index_right_shoulder,
+        )
+        io_cs = (cs1, cs2)
 
         # Raster to stamp
-        no_data = -9999999
-        num_pixels_x = 41
-        num_pixels_y = 11
-        pixel_size = 1
-        min_pt = (-20.0, 0.0)
-        raster_vals = [5] * (num_pixels_x * num_pixels_y)
-        raster = xmsstamper.stamper.StampRaster()
-        raster.no_data = no_data
-        raster.num_pixels_x = num_pixels_x
-        raster.num_pixels_y = num_pixels_y
-        raster.pixel_size_x = pixel_size
-        raster.pixel_size_y = pixel_size
-        raster.min = min_pt
-        raster.vals = raster_vals
-        io.raster = raster
+        io_raster = xmsstamper.stamper.StampRaster(
+            num_pixels_x=41,
+            num_pixels_y=11,
+            pixel_size_x=1,
+            pixel_size_y=1,
+            min=(-20, 0.0),
+            vals=[5] * (41 * 11),
+            no_data=-9999999,
+        )
 
-        st = xmsstamper.stamper.Stamper()
-        st.do_stamp(io)
+        io = xmsstamper.stamper.StamperIo(
+            centerline=io_centerline,
+            stamping_type=io_stamping_type,
+            cs=io_cs,
+            raster=io_raster,
+        )
+
+        stamper.stamp(io)
 
         base_file = os.path.join(
             self.base_file_path, "stamping", "rasterTestFiles", 
@@ -113,28 +117,31 @@ class TestStamper(unittest.TestCase):
 
     def test_stamp_cut_embankment(self):
         """Test stamp cut embankment"""
-        io = xmsstamper.stamper.StamperIo()
-
         # Type and centerline
-        io.stamping_type = 0
-        io.centerline = ((0, 0, 0), (0, 10, 0))
+        io_stamping_type = "cut"
+        io_centerline = ((0, 0, 0), (0, 10, 0))
 
         # Cross sections
-        cs1 = xmsstamper.stamper.StampCrossSection()
-        cs1.left = ((0, 0), (5, 0), (6, 1))
-        cs1.left_max = 20
-        cs1.index_left_shoulder = 1
-        cs1.right = ((0, 0), (5, 0), (6, 1))
-        cs1.right_max = 20
-        cs1.index_right_shoulder = 1
-        cs2 = xmsstamper.stamper.StampCrossSection()
-        cs2.left = ((0, 0), (5, 0), (6, 1))
-        cs2.left_max = 20
-        cs2.index_left_shoulder = 1
-        cs2.right = ((0, 0), (5, 0), (6, 1))
-        cs2.right_max = 20
-        cs2.index_right_shoulder = 1
-        io.cs = (cs1, cs2)
+        left = right = ((0, 0), (5, 0), (6, 1))
+        left_max = right_max = 20
+        index_left_shoulder = index_right_shoulder = 1
+        cs1 = xmsstamper.stamper.StampCrossSection(
+            left=left,
+            right=right,
+            left_max=left_max,
+            right_max=right_max,
+            index_left_shoulder=index_left_shoulder,
+            index_right_shoulder=index_right_shoulder,
+        )
+        cs2 = xmsstamper.stamper.StampCrossSection(
+            left=left,
+            right=right,
+            left_max=left_max,
+            right_max=right_max,
+            index_left_shoulder=index_left_shoulder,
+            index_right_shoulder=index_right_shoulder,
+        )
+        io_cs = (cs1, cs2)
 
         # Raster to stamp
         no_data = -9999999
@@ -151,10 +158,16 @@ class TestStamper(unittest.TestCase):
         raster.pixel_size_y = pixel_size
         raster.min = min_pt
         raster.vals = raster_vals
-        io.raster = raster
+        io_raster = raster
 
-        st = xmsstamper.stamper.Stamper()
-        st.do_stamp(io)
+        io = xmsstamper.stamper.StamperIo(
+            centerline=io_centerline,
+            stamping_type=io_stamping_type,
+            cs=io_cs,
+            raster=io_raster,
+        )
+
+        stamper.stamp(io)
 
         base_file = os.path.join(
             self.base_file_path, "stamping", "rasterTestFiles", 
@@ -183,34 +196,46 @@ class TestStamper(unittest.TestCase):
 
     def test_stamp_wing_wall(self):
         """Test stamp wing wall"""
-        io = xmsstamper.stamper.StamperIo()
-
         # Type and centerline
-        io.stamping_type = 1
-        io.centerline = ((0, 0, 15), (20, 20, 15))
+        io_stamping_type = 'fill'
+        io_centerline = ((0, 0, 15), (20, 20, 15))
 
         # Cross sections
-        cs1 = xmsstamper.stamper.StampCrossSection()
-        cs1.left = ((0, 15), (5, 15), (6, 14))
-        cs1.left_max = 20
-        cs1.index_left_shoulder = 1
-        cs1.right = ((0, 15), (5, 15), (6, 14))
-        cs1.right_max = 20
-        cs1.index_right_shoulder = 1
-        cs2 = xmsstamper.stamper.StampCrossSection()
-        cs2.left = ((0, 15), (5, 15), (6, 14))
-        cs2.left_max = 20
-        cs2.index_left_shoulder = 1
-        cs2.right = ((0, 15), (5, 15), (6, 14))
-        cs2.right_max = 20
-        cs2.index_right_shoulder = 1
-        io.cs = (cs1, cs2)
+        left = right = ((0, 15), (5, 15), (6, 14))
+        left_max = right_max = 20
+        index_left_shoulder = index_right_shoulder = 1
+        cs1 = xmsstamper.stamper.StampCrossSection(
+            left=left,
+            right=right,
+            left_max=left_max,
+            right_max=right_max,
+            index_left_shoulder=index_left_shoulder,
+            index_right_shoulder=index_right_shoulder,
+        )
+        cs2 = xmsstamper.stamper.StampCrossSection(
+            left=left,
+            right=right,
+            left_max=left_max,
+            right_max=right_max,
+            index_left_shoulder=index_left_shoulder,
+            index_right_shoulder=index_right_shoulder,
+        )
+        io_cs = (cs1, cs2)
 
-        io.first_end_cap.angle = 15
-        io.first_end_cap.wing_wall.wing_wall_angle = 15
-
-        io.last_end_cap.angle = -15
-        io.last_end_cap.wing_wall.wing_wall_angle = 10
+        first_wing_wall = xmsstamper.stamper.WingWall(
+            wing_wall_angle=15,
+        )
+        last_wing_wall = xmsstamper.stamper.WingWall(
+            wing_wall_angle=10,
+        )
+        first_end_cap = xmsstamper.stamper.StamperEndCap(
+            angle=15,
+            wing_wall=first_wing_wall,
+        )
+        last_end_cap = xmsstamper.stamper.StamperEndCap(
+            angle=-15,
+            wing_wall=last_wing_wall,
+        )
 
         # Raster to stamp
         no_data = -9999999
@@ -227,10 +252,18 @@ class TestStamper(unittest.TestCase):
         raster.pixel_size_y = pixel_size
         raster.min = min_pt
         raster.vals = raster_vals
-        io.raster = raster
+        io_raster = raster
 
-        st = xmsstamper.stamper.Stamper()
-        st.do_stamp(io)
+        io = xmsstamper.stamper.StamperIo(
+            centerline=io_centerline,
+            stamping_type=io_stamping_type,
+            cs=io_cs,
+            first_end_cap=first_end_cap,
+            last_end_cap=last_end_cap,
+            raster=io_raster,
+        )
+
+        stamper.stamp(io)
 
         base_file = os.path.join(
             self.base_file_path, "stamping", "rasterTestFiles", 
@@ -259,41 +292,44 @@ class TestStamper(unittest.TestCase):
 
     def test_stamp_sloped_abutment(self):
         """Test stamp sloped abutment"""
-        io = xmsstamper.stamper.StamperIo()
-
         # Type and centerline
-        io.stamping_type = 1
-        io.centerline = ((0, 0, 15), (20, 20, 15))
+        io_stamping_type = 'fill'
+        io_centerline = ((0, 0, 15), (20, 20, 15))
 
         # Cross sections
-        cs1 = xmsstamper.stamper.StampCrossSection()
-        cs1.left = ((0, 15), (5, 15), (6, 14))
-        cs1.left_max = 20
-        cs1.index_left_shoulder = 1
-        cs1.right = ((0, 15), (5, 15), (6, 14))
-        cs1.right_max = 20
-        cs1.index_right_shoulder = 1
-        cs2 = xmsstamper.stamper.StampCrossSection()
-        cs2.left = ((0, 15), (5, 15), (6, 14))
-        cs2.left_max = 20
-        cs2.index_left_shoulder = 1
-        cs2.right = ((0, 15), (5, 15), (6, 14))
-        cs2.right_max = 20
-        cs2.index_right_shoulder = 1
-        io.cs = (cs1, cs2)
+        left = right = ((0, 15), (5, 15), (6, 14))
+        left_max = right_max = 20
+        index_left_shoulder = index_right_shoulder = 1
+        cs1 = xmsstamper.stamper.StampCrossSection(
+            left=left,
+            right=right,
+            left_max=left_max,
+            right_max=right_max,
+            index_left_shoulder=index_left_shoulder,
+            index_right_shoulder=index_right_shoulder,
+        )
+        cs2 = xmsstamper.stamper.StampCrossSection(
+            left=left,
+            right=right,
+            left_max=left_max,
+            right_max=right_max,
+            index_left_shoulder=index_left_shoulder,
+            index_right_shoulder=index_right_shoulder,
+        )
+        io_cs = (cs1, cs2)
 
         # Change to sloped abutment end cap
-        io.first_end_cap.type = 1
-
-        # Set the slope and max length for the end cap
-        io.first_end_cap.sloped_abutment.slope = ((0, 15), (1, 14))
-        io.first_end_cap.sloped_abutment.max_x = 10
-
-        # last end cap
-        io.last_end_cap.type = 1
-        io.last_end_cap.sloped_abutment.slope = ((0, 15), (1, 14))
-        io.last_end_cap.sloped_abutment.max_x = 10
-        io.last_end_cap.angle = 20
+        sloped_abutment = xmsstamper.stamper.SlopedAbutment(
+            max_x=10,
+            slope=((0, 15), (1, 14)),
+        )
+        first_end_cap = xmsstamper.stamper.StamperEndCap(
+            sloped_abutment=sloped_abutment,
+        )
+        last_end_cap = xmsstamper.stamper.StamperEndCap(
+            sloped_abutment=sloped_abutment,
+            angle=20,
+        )
 
         # Raster to stamp
         no_data = -9999999
@@ -310,10 +346,18 @@ class TestStamper(unittest.TestCase):
         raster.pixel_size_y = pixel_size
         raster.min = min_pt
         raster.vals = raster_vals
-        io.raster = raster
+        io_raster = raster
 
-        st = xmsstamper.stamper.Stamper()
-        st.do_stamp(io)
+        io = xmsstamper.stamper.StamperIo(
+            centerline=io_centerline,
+            stamping_type=io_stamping_type,
+            first_end_cap=first_end_cap,
+            last_end_cap=last_end_cap,
+            cs=io_cs,
+            raster=io_raster,
+        )
+
+        stamper.stamp(io)
 
         base_file = os.path.join(
             self.base_file_path, "stamping", "rasterTestFiles", 
@@ -346,45 +390,47 @@ class TestStamper(unittest.TestCase):
 
     def test_stamp_guide_bank(self):
         """Test stamp guidebank"""
-        io = xmsstamper.stamper.StamperIo()
-
         # Type and centerline
-        io.stamping_type = 1
-        io.centerline = ((0, 0, 15), (50, 50, 15))
+        io_stamping_type = 'fill'
+        io_centerline = ((0, 0, 15), (50, 50, 15))
 
         # Cross sections
-        cs1 = xmsstamper.stamper.StampCrossSection()
-        cs1.left = ((0, 15), (5, 15), (6, 14))
-        cs1.left_max = 10
-        cs1.index_left_shoulder = 1
-        cs1.right = ((0, 15), (5, 15), (6, 14))
-        cs1.right_max = 10
-        cs1.index_right_shoulder = 1
-        cs2 = xmsstamper.stamper.StampCrossSection()
-        cs2.left = ((0, 15), (5, 15), (6, 14))
-        cs2.left_max = 10
-        cs2.index_left_shoulder = 1
-        cs2.right = ((0, 15), (5, 15), (6, 14))
-        cs2.right_max = 10
-        cs2.index_right_shoulder = 1
-        io.cs = (cs1, cs2)
+        left = right = ((0, 15), (5, 15), (6, 14))
+        left_max = right_max = 10
+        index_left_shoulder = index_right_shoulder = 1
+        cs1 = xmsstamper.stamper.StampCrossSection(
+            left=left,
+            right=right,
+            left_max=left_max,
+            right_max=right_max,
+            index_left_shoulder=index_left_shoulder,
+            index_right_shoulder=index_right_shoulder,
+        )
+        cs2 = xmsstamper.stamper.StampCrossSection(
+            left=left,
+            right=right,
+            left_max=left_max,
+            right_max=right_max,
+            index_left_shoulder=index_left_shoulder,
+            index_right_shoulder=index_right_shoulder,
+        )
+        io_cs = (cs1, cs2)
 
         # change to guidebank end cap
-        io.first_end_cap.type = 0
-        io.first_end_cap.guidebank.n_pts = 10
-        io.first_end_cap.guidebank.radius1 = 30
-        io.first_end_cap.guidebank.radius2 = 15
-        io.first_end_cap.guidebank.side = 0 # Left side
-        io.first_end_cap.guidebank.width = 6
-
-        io.last_end_cap.type = 0
-        io.last_end_cap.guidebank.n_pts = 10
-        io.last_end_cap.guidebank.radius1 = 30
-        io.last_end_cap.guidebank.radius2 = 15
-        io.last_end_cap.guidebank.side = 0 # Left side
-        io.last_end_cap.guidebank.width = 6
-
-        io.last_end_cap.angle = 10
+        guidebank = xmsstamper.stamper.Guidebank(
+            n_pts=10,
+            radius1=30,
+            radius2=15,
+            side=0,  # Left Side
+            width=6,
+        )
+        first_endcap = xmsstamper.stamper.StamperEndCap(
+            guidebank=guidebank,
+        )
+        last_endcap = xmsstamper.stamper.StamperEndCap(
+            guidebank=guidebank,
+            angle=10,
+        )
 
         # Raster to stamp
         no_data = -9999999
@@ -401,10 +447,18 @@ class TestStamper(unittest.TestCase):
         raster.pixel_size_y = pixel_size
         raster.min = min_pt
         raster.vals = raster_vals
-        io.raster = raster
+        io_raster = raster
 
-        st = xmsstamper.stamper.Stamper()
-        st.do_stamp(io)
+        io = xmsstamper.stamper.StamperIo(
+            centerline=io_centerline,
+            stamping_type=io_stamping_type,
+            cs=io_cs,
+            first_end_cap=first_endcap,
+            last_end_cap=last_endcap,
+            raster=io_raster,
+        )
+
+        stamper.stamp(io)
 
         base_file = os.path.join(
             self.base_file_path, "stamping", "rasterTestFiles", 
@@ -422,34 +476,37 @@ class TestStamper(unittest.TestCase):
 
     def test_stamp_intersect_bathymetry(self):
         """Test stamp guidebank"""
-        io = xmsstamper.stamper.StamperIo()
-
         # Type and centerline
-        io.stamping_type = 1
-        io.centerline = ((0, 0, 15), (10, 10, 15))
+        io_stamping_type = 'fill'
+        io_centerline = ((0, 0, 15), (10, 10, 15))
 
         # Cross sections
-        cs1 = xmsstamper.stamper.StampCrossSection()
-        cs1.left = ((0, 15), (5, 15), (6, 14))
-        cs1.left_max = 20
-        cs1.index_left_shoulder = 1
-        cs1.right = ((0, 15), (5, 15), (6, 14))
-        cs1.right_max = 20
-        cs1.index_right_shoulder = 1
-        cs2 = xmsstamper.stamper.StampCrossSection()
-        cs2.left = ((0, 15), (5, 15), (6, 14))
-        cs2.left_max = 20
-        cs2.index_left_shoulder = 1
-        cs2.right = ((0, 15), (5, 15), (6, 14))
-        cs2.right_max = 20
-        cs2.index_right_shoulder = 1
-        io.cs = (cs1, cs2)
+        left = right = ((0, 15), (5, 15), (6, 14))
+        left_max = right_max = 20
+        index_left_shoulder = index_right_shoulder = 1
+        cs1 = xmsstamper.stamper.StampCrossSection(
+            left=left,
+            right=right,
+            left_max=left_max,
+            right_max=right_max,
+            index_left_shoulder=index_left_shoulder,
+            index_right_shoulder=index_right_shoulder,
+        )
+        cs2 = xmsstamper.stamper.StampCrossSection(
+            left=left,
+            right=right,
+            left_max=left_max,
+            right_max=right_max,
+            index_left_shoulder=index_left_shoulder,
+            index_right_shoulder=index_right_shoulder,
+        )
+        io_cs = (cs1, cs2)
 
         # Create a TIN to represent bathymetry
         pts = ((-1, 25, 6), (-15, 11, 6), (5, -11, 10), (20, 4, 10))
         tris = (0, 1, 2, 1, 3, 2)
         tin = xmsinterp.triangulate.Tin(pts, tris)
-        io.bathymetry = tin
+        io_bathymetry = tin
 
         # Raster to stamp
         no_data = -9999999
@@ -466,10 +523,17 @@ class TestStamper(unittest.TestCase):
         raster.pixel_size_y = pixel_size
         raster.min = min_pt
         raster.vals = raster_vals
-        io.raster = raster
+        io_raster = raster
 
-        st = xmsstamper.stamper.Stamper()
-        st.do_stamp(io)
+        io = xmsstamper.stamper.StamperIo(
+            centerline=io_centerline,
+            stamping_type=io_stamping_type,
+            cs=io_cs,
+            raster=io_raster,
+            bathymetry=io_bathymetry,
+        )
+
+        stamper.stamp(io)
 
         base_file = os.path.join(
             self.base_file_path, "stamping", "rasterTestFiles", 

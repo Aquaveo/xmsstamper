@@ -60,8 +60,6 @@ public:
   ~XmStamperImpl();
 
   virtual void DoStamp(XmStamperIo& a_io) override;
-  virtual void FillStamperIoFromCenterlineProfile(XmStamperIo& a_io,
-                                                  XmStamperCenterlineProfile& a_profile) override;
 
   //------------------------------------------------------------------------------
   /// \brief returns the point locations created by the stamp operation.
@@ -251,16 +249,6 @@ void XmStamperImpl::DoStamp(XmStamperIo& a_io)
   }
   
 } // XmStamperImpl::DoStamp
-//------------------------------------------------------------------------------
-/// \brief Converts XmStamperCenterlineProfile class to XmStamperIo class inputs
-/// \param[in,out] a_io The stamping input/output class
-/// \param[in] a_profile The stamping centerline profile class
-//------------------------------------------------------------------------------
-void XmStamperImpl::FillStamperIoFromCenterlineProfile(XmStamperIo& a_io,
-                                                       XmStamperCenterlineProfile& a_profile)
-{
-  m_interp->InterpFromCenterlineProfile(a_io, a_profile);
-} // XmStamperImpl::FillStamperIoFromCenterlineProfile
 //------------------------------------------------------------------------------
 /// \brief Writes the XmStamperIo class to a file for debugging
 //------------------------------------------------------------------------------

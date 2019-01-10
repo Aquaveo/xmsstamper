@@ -166,17 +166,6 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \class XmStamperCenterlineProfile
-/// \brief Cross section for stamping using distance rather than polyline index
-class XmStamperCenterlineProfile
-{
-public:
-  VecDbl m_distance;                     ///< distance from start of polyline for cross section
-  VecDbl m_elevation;                    ///< elevation at the cross section location
-  std::vector<XmStampCrossSection> m_cs; ///< cross sections at locations along the polyline
-};
-
-////////////////////////////////////////////////////////////////////////////////
 /// \class XmStamperIo
 /// \brief Stamping inputs/outputs class
 class XmStamperIo
@@ -199,7 +188,6 @@ public:
   /// Required. Center line for the feature stamp
   VecPt3d m_centerLine;
   /// Stamping type 0 - Cut, 1 - Fill, 2 - Both
-  // TODO: Make these strings instaed of ints for python?
   int m_stampingType;
   /// cross sections along the polyLine
   std::vector<XmStampCrossSection> m_cs;
