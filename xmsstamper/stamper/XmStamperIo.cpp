@@ -27,7 +27,7 @@
 #include <xmscore/misc/StringUtil.h> // stEqualNoCase
 #include <xmscore/misc/XmError.h> // XM_ENSURE_TRUE
 #include <xmscore/misc/xmstype.h> // XM_NODATA
-#include <xmsinterp/triangulate/TrTin.h>
+#include <xmsgrid/triangulate/TrTin.h>
 
 // 6. Non-shared code headers
 

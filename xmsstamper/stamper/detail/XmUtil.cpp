@@ -19,7 +19,7 @@
 
 // 5. Shared code headers
 #include <xmscore/misc/XmError.h>
-#include <xmsinterp/geometry/geoms.h>
+#include <xmsgrid/geometry/geoms.h>
 #include <xmsstamper/stamper/XmStamperIo.h>
 
 // 6. Non-shared code headers

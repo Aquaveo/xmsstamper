@@ -23,7 +23,7 @@
 #include <xmscore/math/math.h>
 #include <xmscore/misc/XmError.h> // XM_ENSURE_TRUE
 #include <xmscore/misc/xmstype.h> // XM_NODATA
-#include <xmsinterp/geometry/geoms.h>
+#include <xmsgrid/geometry/geoms.h>
 #include <xmsinterp/interpolate/InterpLinear.h>
 #include <xmscore/misc/Observer.h>
 #include <xmsstamper/stamper/detail/XmBathymetryIntersector.h>
@@ -33,10 +33,10 @@
 #include <xmsstamper/stamper/detail/XmStampInterpCrossSection.h>
 #include <xmsstamper/stamper/detail/XmUtil.h>
 #include <xmsstamper/stamper/XmStamperIo.h>
-#include <xmsinterp/triangulate/detail/TrOuterTriangleDeleter.h>
-#include <xmsinterp/triangulate/TrTin.h>
-#include <xmsinterp/triangulate/TrBreaklineAdder.h>
-#include <xmsinterp/triangulate/TrTriangulatorPoints.h>
+#include <xmsgrid/triangulate/detail/TrOuterTriangleDeleter.h>
+#include <xmsgrid/triangulate/TrTin.h>
+#include <xmsgrid/triangulate/TrBreaklineAdder.h>
+#include <xmsgrid/triangulate/TrTriangulatorPoints.h>
 #include <xmscore/misc/XmConst.h>
 
 // 6. Non-shared code headers

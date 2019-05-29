@@ -23,13 +23,13 @@
 #include <xmscore/misc/XmError.h>
 #include <xmscore/misc/DynBitset.h>
 #include <xmscore/misc/xmstype.h>
-#include <xmsinterp/geometry/geoms.h>
-#include <xmsinterp/geometry/GmMultiPolyIntersector.h>
-#include <xmsinterp/geometry/GmMultiPolyIntersectionSorterTerse.h>
-#include <xmsinterp/geometry/GmTriSearch.h>
+#include <xmsgrid/geometry/geoms.h>
+#include <xmsgrid/geometry/GmMultiPolyIntersector.h>
+#include <xmsgrid/geometry/GmMultiPolyIntersectionSorterTerse.h>
+#include <xmsgrid/geometry/GmTriSearch.h>
 #include <xmsstamper/stamper/detail/XmStamper3dPts.h>
 #include <xmsstamper/stamper/XmStamperIo.h>
-#include <xmsinterp/triangulate/TrTin.h>
+#include <xmsgrid/triangulate/TrTin.h>
 #include <xmscore/misc/XmConst.h>
 
 // 6. Non-shared code headers
@@ -637,6 +637,44 @@ using namespace xms;
 #include <xmsstamper/stamper/detail/XmBathymetryIntersector.t.h>
 
 #include <xmscore/testing/TestTools.h>
+
+namespace
+{
+//------------------------------------------------------------------------------
+/// \brief Builds a simple TIN with a hole in the middle.
+/// \verbatim
+///
+///  15.0        9
+///             /|\
+///           /  |  \
+///         /  8 | 9  \
+///  10.0  6-----7-----8
+///        |\  5 |\  6 |\
+///        |  \  |  \  |  \
+///        | 4  \|    \| 7  \
+///   5.0  2-----3-----4-----5
+///         \  0 |\  2 | 3  /
+///           \  |  \  |  /
+///             \| 1  \|/
+///   0.0        0-----1
+///
+///      0.0   5.0   10.0  15.0
+///
+/// \endverbatim
+/// \return The tin.
+//------------------------------------------------------------------------------
+BSHP<TrTin> trBuildTestTin()
+{
+  BSHP<TrTin> tin = TrTin::New();
+
+  tin->Points() = {{5, 0, 0},  {10, 0, 0}, {0, 5, 0},  {5, 5, 0},   {10, 5, 0},
+                   {15, 5, 0}, {0, 10, 0}, {5, 10, 0}, {10, 10, 0}, {5, 15, 0}};
+  tin->Triangles() = {0, 3, 2, 0, 1, 3, 1, 4, 3, 1, 5, 4, 2, 3, 6,
+                      3, 7, 6, 4, 8, 7, 4, 5, 8, 6, 7, 9, 7, 8, 9};
+  tin->BuildTrisAdjToPts();
+  return tin;
+} // trBuildTestTin
+} // namespace {
 
 //------------------------------------------------------------------------------
 /// \brief Tests XmBathymetryIntersectorUnitTests

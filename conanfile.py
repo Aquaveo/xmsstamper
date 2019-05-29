@@ -38,6 +38,10 @@ class XmsstamperConan(ConanFile):
         self.options['xmscore'].pybind = self.options.pybind
         self.options['xmscore'].testing = self.options.testing
 
+        self.options['xmsgrid'].xms = self.options.xms
+        self.options['xmsgrid'].pybind = self.options.pybind
+        self.options['xmsgrid'].testing = self.options.testing
+
         self.options['xmsinterp'].xms = self.options.xms
         self.options['xmsinterp'].pybind = self.options.pybind
         self.options['xmsinterp'].testing = self.options.testing
@@ -55,6 +59,7 @@ class XmsstamperConan(ConanFile):
         # If building for XMS, use the older, custom boost
         if self.options.xms and self.settings.compiler.version == "12":
             self.requires("boost/1.60.0@aquaveo/testing")
+            self.requires("zlib/1.2.11@conan/stable")
         else:
             self.requires("boost/1.66.0@conan/stable")
         # Pybind if not Visual studio 2013
@@ -63,9 +68,10 @@ class XmsstamperConan(ConanFile):
                 and self.options.pybind:
             self.requires("pybind11/2.2.2@aquaveo/stable")
 
-        # Use the dev version of XMSCore, XMSInterp, XMSGrid, XMSExtractor
-        self.requires("xmscore/[>=2.0.0,<3.0]@aquaveo/stable")
-        self.requires("xmsinterp/[>=2.0.0,<3.0]@aquaveo/stable")
+        # Use the dev version of XMSCore, XMSInterp, XMSGrid
+        self.requires("xmscore/[>=3.0.5,<4.0.0]@aquaveo/stable")
+        self.requires("xmsgrid/[>=3.0.3,<4.0.0]@aquaveo/stable")
+        self.requires("xmsinterp/[>=3.0.3,<4.0.0]@aquaveo/stable")
 
     def build(self):
         cmake = CMake(self)
