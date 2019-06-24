@@ -13,15 +13,10 @@
 namespace py = pybind11;
 
 //----- Python Interface -------------------------------------------------------
-#ifndef XMS_VERSION
-  #define XMS_VERSION "99.99.99";
-#endif
-
 
 //------ Primary Module --------------------------------------------------------
-PYBIND11_MODULE(xmsstamper, m) {
+PYBIND11_MODULE(_xmsstamper, m) {
     m.doc() = "Python bindings for the xmsstamper library"; // optional module docstring
-    m.attr("__version__") = XMS_VERSION;
 
     // Stamper module
     py::module modStamper = m.def_submodule("stamper");

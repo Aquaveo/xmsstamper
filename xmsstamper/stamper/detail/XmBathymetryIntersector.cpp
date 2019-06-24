@@ -23,13 +23,13 @@
 #include <xmscore/misc/XmError.h>
 #include <xmscore/misc/DynBitset.h>
 #include <xmscore/misc/xmstype.h>
-#include <xmsinterp/geometry/geoms.h>
-#include <xmsinterp/geometry/GmMultiPolyIntersector.h>
-#include <xmsinterp/geometry/GmMultiPolyIntersectionSorterTerse.h>
-#include <xmsinterp/geometry/GmTriSearch.h>
+#include <xmsgrid/geometry/geoms.h>
+#include <xmsgrid/geometry/GmMultiPolyIntersector.h>
+#include <xmsgrid/geometry/GmMultiPolyIntersectionSorterTerse.h>
+#include <xmsgrid/geometry/GmTriSearch.h>
 #include <xmsstamper/stamper/detail/XmStamper3dPts.h>
 #include <xmsstamper/stamper/XmStamperIo.h>
-#include <xmsinterp/triangulate/TrTin.h>
+#include <xmsgrid/triangulate/TrTin.h>
 #include <xmscore/misc/XmConst.h>
 
 // 6. Non-shared code headers

@@ -50,7 +50,7 @@
 
 #include <xmsstamper/stamper/XmStamper.h>
 #include <xmsstamper/stamper/XmStamperIo.h>
-#include <xmsinterp/triangulate/TrTin.h>
+#include <xmsgrid/triangulate/TrTin.h>
 #include <xmscore/misc/environment.h>
 
 using namespace xms;

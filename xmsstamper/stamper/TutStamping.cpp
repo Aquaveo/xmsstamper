@@ -48,10 +48,10 @@ namespace xms
 #include <xmscore/misc/xmstype.h> // XM_NODATA
 #include <xmscore/testing/TestTools.h> // TS_ASSERT_EQUALS
 
-#include <xmsinterp/geometry/geoms.h>
+#include <xmsgrid/geometry/geoms.h>
 #include <xmsstamper/stamper/XmStamper.h>
 #include <xmsstamper/stamper/XmStamperIo.h>
-#include <xmsinterp/triangulate/TrTin.h>
+#include <xmsgrid/triangulate/TrTin.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class TutStampingUnitTests

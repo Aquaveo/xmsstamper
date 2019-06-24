@@ -1,0 +1,1 @@
+from xms.stamper.api.stamp import stamp

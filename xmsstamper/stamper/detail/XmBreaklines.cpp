@@ -23,8 +23,8 @@
 
 // 5. Shared code headers
 #include <xmscore/misc/XmLog.h>
-#include <xmsinterp/geometry/geoms.h>
-#include <xmsinterp/geometry/GmBoostTypes.h> // GmBstPoly3d, XmBstRing
+#include <xmsgrid/geometry/geoms.h>
+#include <xmsgrid/geometry/GmBoostTypes.h> // GmBstPoly3d, XmBstRing
 #include <xmsstamper/stamper/detail/XmGuideBankUtil.h>
 #include <xmsstamper/stamper/detail/XmSlopedAbutmentUtil.h>
 #include <xmsstamper/stamper/detail/XmStamper3dPts.h>

@@ -50,16 +50,6 @@ message(STATUS "External Lib Dirs: ${EXT_LIB_DIRS}")
 message(STATUS "Extneral Libs: ${EXT_LIBS}")
 
 if(IS_PYTHON_BUILD)
-      # linux and mac builds for conan (on TRAVISCI) use a docker that has python
-    # 2.7 as system python. We do not have control over that docker image so we
-    # can't change this and it is fine for building conan packages and checking
-    # that we don't have errors in the python wrapping. We have conda recipes
-    # for building python packages that target other versions of python.
-    find_package(PythonLibs ${PYTHON_TARGET_VERSION} EXACT REQUIRED)
-    
-    message("PYTHON_INCLUDE: ${PYTHON_INCLUDE_DIRS}")
-    message("PYTHON_LIBS: ${PYTHON_LIBRARIES}")
-
     # Pybind11 module
     if(IS_CONDA_BUILD)
         include("${CONDA_PREFIX}/share/cmake/pybind11/pybind11Targets.cmake")
@@ -75,6 +65,11 @@ if(IS_PYTHON_BUILD)
         include("${CONAN_PYBIND11_ROOT}/share/cmake/pybind11/pybind11ConfigVersion.cmake")
         include("${CONAN_PYBIND11_ROOT}/share/cmake/pybind11/pybind11Tools.cmake")
     endif()
+
+    find_package(PythonLibsNew ${PYTHON_TARGET_VERSION} EXACT REQUIRED)
+
+    message("PYTHON_INCLUDE: ${PYTHON_INCLUDE_DIRS}")
+    message("PYTHON_LIBS: ${PYTHON_LIBRARIES}")
 
     list(APPEND EXT_INCLUDE_DIRS
       ${PYTHON_INCLUDE_DIRS}
@@ -181,30 +176,42 @@ endif()
 
 #Pybind11
 if(IS_PYTHON_BUILD)
-    pybind11_add_module(xmsstamper
+    pybind11_add_module(_xmsstamper
       ${xmsstamper_py} ${xmsstamper_py_headers}
     )
-    target_include_directories(xmsstamper
+    target_include_directories(_xmsstamper
       PRIVATE
           ${EXT_LIBS}
           ${PYTHON_INCLUDE_DIRS}
     )
-    target_link_libraries(xmsstamper
+    target_link_libraries(_xmsstamper
     PRIVATE
       ${EXT_LIBS}
       ${PROJECT_NAME}
   )
-    set_target_properties(xmsstamper PROPERTIES
+    set_target_properties(_xmsstamper PROPERTIES
     LINKER_LANGUAGE CXX
   )
 
   # Install recipe
-  install(
-    TARGETS xmsstamper
-    ARCHIVE DESTINATION "site-packages"
-    LIBRARY DESTINATION "site-packages"
-  )
+    install(
+      TARGETS _xmsstamper
+      ARCHIVE DESTINATION "_package/xms/stamper"
+      LIBRARY DESTINATION "_package/xms/stamper"
+    )
 
+  install(DIRECTORY "_package/" DESTINATION "_package"
+           FILES_MATCHING PATTERN "*.py")
+
+endif()
+
+# Disable Optimization for GCC6 for now... Report issue to gcc and pybind
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND IS_PYTHON_BUILD)
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 6 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7)
+    Message("Disabling Optimization for GCC 6...")
+    STRING(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
+    STRING(REPLACE "-O3" "" CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
+  endif()
 endif()
 
 # Install recipe

@@ -28,17 +28,9 @@ void initXmStamperModule(py::module &m)
     // -------------------------------------------------------------------------------------------
     // function: stamp
     // -------------------------------------------------------------------------------------------
-    const char* stamp_doc = R"pydoc(
-        Performs the feature stamping operation
-
-        Args:
-            stamper_io (XmStamperIo): The stamping input/output class. When sucessful, the out_tin and out_breaklines members of stamper_io and filled by this method.
-    )pydoc";
-    modStamper.def("stamp",
-        [](xms::XmStamperIo &stamper_io) {
+    modStamper.def("stamp", [](xms::XmStamperIo &stamper_io) {
             boost::shared_ptr<xms::XmStamper> stamper = xms::XmStamper::New();
             stamper->DoStamp(stamper_io);
-        }, stamp_doc, py::arg("stamper_io")
-    );
+    }, py::arg("stamper_io"));
 }
 

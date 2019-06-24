@@ -21,7 +21,7 @@
 #include <xmscore/math/math.h>
 #include <xmscore/misc/XmError.h>
 #include <xmscore/stl/set.h>
-#include <xmsinterp/geometry/geoms.h>
+#include <xmsgrid/geometry/geoms.h>
 #include <xmscore/misc/Observer.h>
 #include <xmsstamper/stamper/XmStamperIo.h>
 

@@ -18,7 +18,7 @@
 
 // 5. Shared code headers
 #include <xmscore/misc/XmError.h>
-#include <xmsinterp/geometry/geoms.h>
+#include <xmsgrid/geometry/geoms.h>
 #include <xmscore/misc/xmstype.h>
 #include <xmsstamper/stamper/XmStamperIo.h>
 #include <xmsstamper/stamper/detail/XmBreaklines.h>
