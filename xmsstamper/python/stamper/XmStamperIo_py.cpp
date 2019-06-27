@@ -68,7 +68,7 @@ void initXmStamperIo(py::module &m)
     }
     if (!no_data.is_none())
     {
-      xm_stamp_raster->m_noData = py::cast<int>(no_data);
+      xm_stamp_raster->m_noData = py::cast<float>(no_data);
     }
     return xm_stamp_raster;
   }),
@@ -552,20 +552,30 @@ void initXmStamperIo(py::module &m)
      py::object first_end_cap, py::object last_end_cap,
      py::object bathymetry, py::object raster) {
     boost::shared_ptr<xms::XmStamperIo> rval(new xms::XmStamperIo);
-    rval->m_centerLine = *xms::VecPt3dFromPyIter(centerline);
-    rval->m_stampingType = py::cast<int>(stamping_type);
-    std::vector<xms::XmStampCrossSection> vec_cs;
-    vec_cs.resize(py::len(cs));
-    int i = 0;
-    for (auto item : cs)
+
+    if (!centerline.is_none())
     {
+      rval->m_centerLine = *xms::VecPt3dFromPyIter(centerline);
+    }
+    if (!stamping_type.is_none())
+    {
+      rval->m_stampingType = py::cast<int>(stamping_type);
+    }
+    if (!cs.is_none())
+    {
+      std::vector<xms::XmStampCrossSection> vec_cs;
+      vec_cs.resize(py::len(cs));
+      int i = 0;
+      for (auto item : cs)
+      {
         if (!item.is_none())
         {
-            vec_cs.at(i) = item.cast<xms::XmStampCrossSection>();
+          vec_cs.at(i) = item.cast<xms::XmStampCrossSection>();
         }
         i++;
+      }
+      rval->m_cs = vec_cs;
     }
-    rval->m_cs = vec_cs;
     if (!first_end_cap.is_none())
     {
       rval->m_firstEndCap= py::cast<xms::XmStamperEndCap>(first_end_cap);
@@ -585,8 +595,7 @@ void initXmStamperIo(py::module &m)
       rval->m_raster = py::cast<xms::XmStampRaster>(raster);
     }
     return rval;
-  }
-  ), py::arg("centerline"), py::arg("stamping_type") = py::none(), py::arg("cs"),
+  }), py::arg("centerline"), py::arg("stamping_type") = py::none(), py::arg("cs"),
      py::arg("first_end_cap") = py::none(), py::arg("last_end_cap") = py::none(),
      py::arg("bathymetry") = py::none(), py::arg("raster") = py::none());
   // ---------------------------------------------------------------------------
@@ -660,7 +669,7 @@ void initXmStamperIo(py::module &m)
   // ---------------------------------------------------------------------------
   // function: outTin
   // ---------------------------------------------------------------------------
-  stamper_io.def("outTin",
+  stamper_io.def_property_readonly("outTin",
   [](xms::XmStamperIo &self) -> boost::shared_ptr<xms::TrTin>
   {
     return self.m_outTin;

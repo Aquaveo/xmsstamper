@@ -1,4 +1,5 @@
-from .._xmsstamper import stamper
+from .._xmsstamper.stamper import stamper
+from .stamper_io import StamperIo
 
 def stamp(stamper_io):
     """
@@ -9,4 +10,6 @@ def stamp(stamper_io):
     Returns:
 
     """
-    stamper.stamp(stamper_io)
+    if not isinstance(stamper_io, StamperIo):
+        raise ValueError("input must be of type StamperIo")
+    stamper.stamp(stamper_io._instance)

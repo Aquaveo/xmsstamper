@@ -4,6 +4,10 @@ from .._xmsstamper.stamper import XmSlopedAbutment
 from .._xmsstamper.stamper import XmGuidebank
 from .._xmsstamper.stamper import XmStamperEndCap
 from .._xmsstamper.stamper import XmStampCrossSection
+from .._xmsstamper.stamper import XmStamperIo
+
+from xms.grid.triangulate.tin import Tin
+from xms.grid._xmsgrid.triangulate import TrTin
 
 
 class StampRaster(object):
@@ -13,8 +17,27 @@ class StampRaster(object):
             self._instance = kwargs['instance']
             return
 
-        self._instance = XmStampRaster(num_pixels_x, num_pixels_y, pixel_size_x,
-                                       pixel_size_y, min_point, vals, no_data)
+        self._instance = XmStampRaster()
+
+        if num_pixels_x is not None:
+            self.num_pixels_x = num_pixels_x
+
+        if num_pixels_y is not None:
+            self.num_pixels_y = num_pixels_y
+
+        if pixel_size_x is not None:
+            self.pixel_size_x = pixel_size_x
+
+        if pixel_size_y is not None:
+            self.pixel_size_y = pixel_size_y
+
+        if min_point is not None:
+            self.min_point = min_point
+
+        if vals is not None:
+            self.vals = vals
+
+        self.no_data = no_data
 
     def _format_from_string(self, raster_format):
         raster_formats = {
@@ -51,7 +74,7 @@ class StampRaster(object):
 
     @property
     def pixel_size_y(self):
-        return self._instance.numPixelsY
+        return self._instance.pixelSizeY
 
     @pixel_size_y.setter
     def pixel_size_y(self, value):
@@ -90,7 +113,7 @@ class StampRaster(object):
     def get_location_from_cell_index(self, index):
         return self._instance.GetLocationFromCellIndex(index)
 
-    def write_to_grid_file(self, file_name, raster_format="ascii"):
+    def write_grid_file(self, file_name, raster_format="ascii"):
         return self._instance.WriteGridFile(file_name, self._format_from_string(raster_format))
 
     def write_to_file(self, file_name, card_name):
@@ -273,10 +296,13 @@ class EndCap(object):
     @endcap.setter
     def endcap(self, value):
         if isinstance(value, Guidebank):
+            self._instance.type = 0
             self._instance.guidebank = value._instance
         if isinstance(value, SlopedAbutment):
+            self._instance.type = 1
             self._instance.slopedAbutment = value._instance
         if isinstance(value, WingWall):
+            self._instance.type = 2
             self._instance.wingWall = value._instance
 
     def write_to_file(self, file_name, card_name):
@@ -293,12 +319,13 @@ class CrossSection(object):
             self._instance = kwargs['instance']
             return
 
-        self._instance = XmStampCrossSection()
+        if right is None:
+            raise ValueError("right is a required argument")
+        if left is None:
+            raise ValueError("left is a required argument")
 
-        if right is not None:
-            self.right = right
-        if left is not None:
-            self.left = left
+        self._instance = XmStampCrossSection(left, right)
+
         if right_max is not None:
             self.right_max = right_max
         if left_max is not None:
@@ -342,19 +369,19 @@ class CrossSection(object):
 
     @property
     def index_left_shoulder(self):
-        return self._instance.indexLeftShoulder
+        return self._instance.idxLeftShoulder
 
     @index_left_shoulder.setter
     def index_left_shoulder(self, value):
-        self._instance.indexLeftShoulder = value
+        self._instance.idxLeftShoulder = value
 
     @property
     def index_right_shoulder(self):
-        return self._instance.indexRightShoulder
+        return self._instance.idxRightShoulder
 
     @index_right_shoulder.setter
     def index_right_shoulder(self, value):
-        self._instance.indexRightShoulder = value
+        self._instance.idxRightShoulder = value
 
     def write_to_file(self, file_name, card_name):
         return self._instance.WriteToFile(file_name, card_name)
@@ -364,4 +391,132 @@ class CrossSection(object):
 
 
 class StamperIo(object):
-    pass
+    def __init__(self, center_line=None, stamping_type=None, cs=None, first_end_cap=None, last_end_cap=None,
+                 bathymetry=None, raster=None, **kwargs):
+        if 'instance' in kwargs:
+            self._instance = kwargs['instance']
+            return
+
+
+        if center_line is None:
+            raise ValueError("center_line is a required argument")
+
+        if cs is None:
+            raise ValueError("cs is a required argument")
+
+        cs_instances = [x._instance for x in cs]
+
+        self._instance = XmStamperIo(centerline=center_line, cs=cs_instances)
+
+        if stamping_type is not None:
+            self.stamping_type = stamping_type
+
+        if first_end_cap is not None:
+            self.first_end_cap = first_end_cap
+
+        if last_end_cap is not None:
+            self.last_end_cap = last_end_cap
+
+        if bathymetry is not None:
+            self.bathymetry = bathymetry
+
+        if raster is not None:
+            self.raster = raster
+
+    @property
+    def center_line(self):
+        return self._instance.centerLine
+
+    @center_line.setter
+    def center_line(self, value):
+        self._instance.centerLine = value
+
+    @property
+    def stamping_type(self):
+        stamp_type = {
+            0: "cut",
+            1: "fill",
+            2: "both",
+        }
+        stamping_type = self._instance.stampingType
+        if stamping_type not in stamp_type:
+            raise RuntimeError("Unknown stamping type... ({})".format(stamping_type))
+        return stamp_type[stamping_type]
+
+    @stamping_type.setter
+    def stamping_type(self, value):
+        stamp_type = {
+            "cut": 0,
+            "fill": 1,
+            "both": 2,
+        }
+        if value not in stamp_type:
+            raise RuntimeError("Unknown stamping type... ({})".format(value))
+        self._instance.stampingType = stamp_type[value]
+
+    @property
+    def cs(self):
+        _cs = [CrossSection(instance=x) for x in self._instance.cs]
+        return _cs
+
+    @cs.setter
+    def cs(self, value):
+        _cs = [x._instance for x in value]
+        self._instance.cs = _cs
+
+    @property
+    def first_end_cap(self):
+        return EndCap(instance=self._instance.firstEndCap)
+
+    @first_end_cap.setter
+    def first_end_cap(self, value):
+        if not isinstance(value, EndCap):
+            raise ValueError("first_end_cap must be an EndCap")
+        self._instance.firstEndCap = value._instance
+
+    @property
+    def last_end_cap(self):
+        return EndCap(instance=self._instance.lastEndCap)
+
+    @last_end_cap.setter
+    def last_end_cap(self, value):
+        if not isinstance(value, EndCap):
+            raise ValueError("last_end_cap must be an EndCap")
+        self._instance.lastEndCap = value._instance
+
+    @property
+    def bathymetry(self):
+        return Tin(instance=self._instance.bathymetry)
+
+    @bathymetry.setter
+    def bathymetry(self, value):
+        if not isinstance(value, Tin):
+            raise ValueError("bathymetry must be a Tin")
+        self._instance.bathymetry = value._instance
+
+    @property
+    def out_tin(self):
+        return Tin(instance=self._instance.outTin)
+
+    @property
+    def out_breaklines(self):
+        return self._instance.outBreaklines
+
+    @property
+    def raster(self):
+        return StampRaster(instance=self._instance.raster)
+
+    @raster.setter
+    def raster(self, value):
+        if not isinstance(value, StampRaster):
+            raise ValueError("raster must be of type StampRaster")
+        self._instance.raster = value._instance
+
+    def write_to_file(self, file_name, card_name):
+        return self._instance.WriteToFile(file_name, card_name)
+
+    def read_from_file(self, file_name):
+        return self._instance.ReadFromFile(file_name)
+
+    def set_precision_for_output(self, precision):
+        self._instance.SetPrecisionForOutput(precision)

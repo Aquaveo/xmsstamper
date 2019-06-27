@@ -45,7 +45,7 @@ public:
   Pt3d m_min; ///< Minimum (lower left) X, Y coordinate of the raster at the center of the raster cell (Required)
   std::vector<double> m_vals; ///< Raster values defined from the top left corner to the bottom right corner (Required)
                               ///< Use the m_noData value to specify a cell value with no data.
-  int m_noData; ///< NO DATA value for the raster (typically XM_NODATA)
+  float m_noData; ///< NO DATA value for the raster (typically XM_NODATA)
   int GetCellIndexFromColRow(const int a_col, const int a_row) const;
   void GetColRowFromCellIndex(const int a_index, int & a_col, int & a_row) const;
   Pt3d GetLocationFromCellIndex(const int a_index) const;
