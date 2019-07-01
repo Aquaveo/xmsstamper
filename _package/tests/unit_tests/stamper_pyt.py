@@ -149,14 +149,15 @@ class TestStamper(unittest.TestCase):
         pixel_size = 1
         min_pt = (-20.0, 0.0)
         raster_vals = [5] * (num_pixels_x * num_pixels_y)
-        raster = xms.stamper.stamping.StampRaster()
-        raster.no_data = no_data
-        raster.num_pixels_x = num_pixels_x
-        raster.num_pixels_y = num_pixels_y
-        raster.pixel_size_x = pixel_size
-        raster.pixel_size_y = pixel_size
-        raster.min_point= min_pt
-        raster.vals = raster_vals
+        raster = xms.stamper.stamping.StampRaster(
+            num_pixels_x=num_pixels_x,
+            num_pixels_y=num_pixels_y,
+            pixel_size_x=pixel_size,
+            pixel_size_y=pixel_size,
+            min_point=min_pt,
+            vals=raster_vals,
+            no_data=no_data
+        )
         io_raster = raster
 
         io = xms.stamper.stamping.StamperIo(
@@ -241,13 +242,15 @@ class TestStamper(unittest.TestCase):
         pixel_size = 1
         min_pt = (-16.0, -8.0)
         raster_vals = [float('nan')] * (num_pixels_x * num_pixels_y)
-        raster = xms.stamper.stamping.StampRaster()
-        raster.num_pixels_x = num_pixels_x
-        raster.num_pixels_y = num_pixels_y
-        raster.pixel_size_x = pixel_size
-        raster.pixel_size_y = pixel_size
-        raster.min_point = min_pt
-        raster.vals = raster_vals
+        raster = xms.stamper.stamping.StampRaster(
+            num_pixels_x=num_pixels_x,
+            num_pixels_y=num_pixels_y,
+            pixel_size_x=pixel_size,
+            pixel_size_y=pixel_size,
+            min_point=min_pt,
+            vals=raster_vals,
+            no_data=float('nan'),
+        )
         io_raster = raster
 
         io = xms.stamper.stamping.StamperIo(
@@ -332,13 +335,15 @@ class TestStamper(unittest.TestCase):
         pixel_size = 1
         min_pt = (-17.0, -17.0)
         raster_vals = [float('nan')] * (num_pixels_x * num_pixels_y)
-        raster = xms.stamper.stamping.StampRaster()
-        raster.num_pixels_x = num_pixels_x
-        raster.num_pixels_y = num_pixels_y
-        raster.pixel_size_x = pixel_size
-        raster.pixel_size_y = pixel_size
-        raster.min_point = min_pt
-        raster.vals = raster_vals
+        raster = xms.stamper.stamping.StampRaster(
+            num_pixels_x=num_pixels_x,
+            num_pixels_y=num_pixels_y,
+            pixel_size_x=pixel_size,
+            pixel_size_y=pixel_size,
+            min_point=min_pt,
+            vals=raster_vals,
+            no_data=float('nan'),
+        )
         io_raster = raster
 
         io = xms.stamper.stamping.StamperIo(
@@ -413,7 +418,7 @@ class TestStamper(unittest.TestCase):
             n_points=10,
             radius1=30,
             radius2=15,
-            side=0,  # Left Side
+            side='left',  # Left Side
             width=6,
         )
         first_endcap = xms.stamper.stamping.EndCap(
@@ -431,14 +436,15 @@ class TestStamper(unittest.TestCase):
         pixel_size = 1
         min_pt = (-21.0, -12.0)
         raster_vals = [no_data] * (num_pixels_x * num_pixels_y)
-        raster = xms.stamper.stamping.StampRaster()
-        raster.no_data = no_data
-        raster.num_pixels_x = num_pixels_x
-        raster.num_pixels_y = num_pixels_y
-        raster.pixel_size_x = pixel_size
-        raster.pixel_size_y = pixel_size
-        raster.min_point = min_pt
-        raster.vals = raster_vals
+        raster = xms.stamper.stamping.StampRaster(
+            num_pixels_x=num_pixels_x,
+            num_pixels_y=num_pixels_y,
+            pixel_size_x=pixel_size,
+            pixel_size_y=pixel_size,
+            min_point=min_pt,
+            vals=raster_vals,
+            no_data=no_data
+        )
         io_raster = raster
 
         io = xms.stamper.stamping.StamperIo(
@@ -506,14 +512,15 @@ class TestStamper(unittest.TestCase):
         pixel_size = 1
         min_pt = (-10.0, -8.0)
         raster_vals = [no_data] * (num_pixels_x * num_pixels_y)
-        raster = xms.stamper.stamping.StampRaster()
-        raster.no_data = no_data
-        raster.num_pixels_x = num_pixels_x
-        raster.num_pixels_y = num_pixels_y
-        raster.pixel_size_x = pixel_size
-        raster.pixel_size_y = pixel_size
-        raster.min_point = min_pt
-        raster.vals = raster_vals
+        raster = xms.stamper.stamping.StampRaster(
+            num_pixels_x=num_pixels_x,
+            num_pixels_y=num_pixels_y,
+            pixel_size_x=pixel_size,
+            pixel_size_y=pixel_size,
+            min_point=min_pt,
+            vals=raster_vals,
+            no_data=no_data
+        )
         io_raster = raster
 
         io = xms.stamper.stamping.StamperIo(

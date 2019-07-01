@@ -17,39 +17,82 @@ class StampRaster(object):
             self._instance = kwargs['instance']
             return
 
+        if num_pixels_x is None:
+            raise ValueError("num_pixels_x is a required argument")
+
+        if num_pixels_y is None:
+            raise ValueError("num_pixels_y is a required argument")
+
+        if pixel_size_x is None:
+            raise ValueError("pixel_size_x is a required argument")
+
+        if pixel_size_y is None:
+            raise ValueError("pixel_size_y is a required argument")
+
+        if min_point is None:
+            raise ValueError("min_point is a required argument")
+
+        if vals is None:
+            raise ValueError("vals is a required argument")
+
         self._instance = XmStampRaster()
 
-        if num_pixels_x is not None:
-            self.num_pixels_x = num_pixels_x
-
-        if num_pixels_y is not None:
-            self.num_pixels_y = num_pixels_y
-
-        if pixel_size_x is not None:
-            self.pixel_size_x = pixel_size_x
-
-        if pixel_size_y is not None:
-            self.pixel_size_y = pixel_size_y
-
-        if min_point is not None:
-            self.min_point = min_point
-
-        if vals is not None:
-            self.vals = vals
+        self.num_pixels_x = num_pixels_x
+        self.num_pixels_y = num_pixels_y
+        self.pixel_size_x = pixel_size_x
+        self.pixel_size_y = pixel_size_y
+        self.min_point = min_point
+        self.vals = vals
 
         self.no_data = no_data
 
-    def _format_from_string(self, raster_format):
+    @staticmethod
+    def _format_from_string(raster_format):
+        """
+        Get the raster format enum from a string
+
+        Args:
+            raster_format: a string representing the raster format you wish to use
+
+        Returns:
+            The raster format enum matching the string provided
+        """
         raster_formats = {
             'ascii': XmStampRaster.raster_format_enum.RS_ARCINFO_ASCII,
         }
         requested_format = raster_formats.get(raster_format, None)
         if not requested_format:
-            raise RuntimeError("raster format must be one of {}, not {}".format(", ".join(raster_formats), raster_format))
+            raise RuntimeError("raster format must be one of {}, not {}".format(", ".join(raster_formats),
+                                                                                raster_format))
         return requested_format
+
+    def __eq__(self, other):
+        other_instance = getattr(other, '_instance', None)
+        if not other_instance or not isinstance(other_instance, XmStampRaster):
+            return False
+        return other_instance == self._instance
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        return not result
+
+    def __repr__(self):
+        return "<StampRaster - num_pixels_x: {}, num_pixels_y: {}, pixel_size_x: {} pixels_size_y: {} " \
+               "no_data: {}, minimum value: {}, maximum value: {}>".format(
+                    self.num_pixels_x, self.num_pixels_y, self.pixel_size_x, self.pixel_size_y, self.no_data,
+                    min(self.vals), max(self.vals)
+                )
+
+    def __str__(self):
+        return "<StampRaster - num_pixels_x: {}, num_pixels_y: {}, pixel_size_x: {} pixels_size_y: {} " \
+               "no_data: {}, minimum value: {}, maximum value: {}>".format(
+                    self.num_pixels_x, self.num_pixels_y, self.pixel_size_x, self.pixel_size_y, self.no_data,
+                    min(self.vals), max(self.vals)
+                )
 
     @property
     def num_pixels_x(self):
+        """number of pixels in the x direction"""
         return self._instance.numPixelsX
 
     @num_pixels_x.setter
@@ -58,6 +101,7 @@ class StampRaster(object):
 
     @property
     def num_pixels_y(self):
+        """number of pixels in the y direction"""
         return self._instance.numPixelsY
 
     @num_pixels_y.setter
@@ -66,6 +110,7 @@ class StampRaster(object):
 
     @property
     def pixel_size_x(self):
+        """pixel size x"""
         return self._instance.pixelSizeX
 
     @pixel_size_x.setter
@@ -74,6 +119,7 @@ class StampRaster(object):
 
     @property
     def pixel_size_y(self):
+        """pixel size y"""
         return self._instance.pixelSizeY
 
     @pixel_size_y.setter
@@ -82,6 +128,7 @@ class StampRaster(object):
 
     @property
     def min_point(self):
+        """minimum (lower left) X, Y coordinate of the raster at the center of the raster cell"""
         return self._instance.min
 
     @min_point.setter
@@ -90,6 +137,10 @@ class StampRaster(object):
 
     @property
     def vals(self):
+        """
+        Raster values defined from the top left corner to the bottom right corner Use
+        the no_data value to specify a cell value with no data.
+        """
         return self._instance.vals
 
     @vals.setter
@@ -98,6 +149,7 @@ class StampRaster(object):
 
     @property
     def no_data(self):
+        """the value that represents cells with no data"""
         return self._instance.noData
 
     @no_data.setter
@@ -105,34 +157,99 @@ class StampRaster(object):
         self._instance.noData = value
 
     def get_cell_index_from_col_row(self, col, row):
+        """
+        Gets the zero-based cell index from the given column and row.
+
+        Args:
+            col (int): The zero-based column index for the raster.
+            row (int): The zero-based row index for the raster.
+
+        Returns:
+            The zero-based cell index from the given a_col, a_row.
+        """
         return self._instance.GetCellIndexFromColRow(col, row)
 
     def get_col_row_from_cell_index(self, index):
+        """
+        Gets the zero-based column and row from the cell index.
+
+        Args:
+            index (int): The zero-based raster cell index.
+
+        Returns:
+            Tuple of (col, row) of the cell by index
+        """
         return self._instance.GetColRowFromCellIndex(index)
 
     def get_location_from_cell_index(self, index):
+        """
+        Gets the location of the cell center from the zero-based cell index.
+
+        Args:
+            index (int): The zero-based raster cell index.
+
+        Returns:
+            The location of the cell with the given index.
+        """
         return self._instance.GetLocationFromCellIndex(index)
 
     def write_grid_file(self, file_name, raster_format="ascii"):
+        """
+        Writes the raster in the given format to the given filename.
+
+        Args:
+            file_name (str): The output raster filename.
+            raster_format (str): The output raster format
+        """
         return self._instance.WriteGridFile(file_name, self._format_from_string(raster_format))
 
     def write_to_file(self, file_name, card_name):
+        """
+        Writes the StampRaster class information to a file.
+
+        Args:
+            file_name (str): The input file.
+            card_name (str): The card name to be written to the output file.
+        """
         return self._instance.WriteToFile(file_name, card_name)
 
     def read_from_file(self, file_name):
+        """
+        Reads the StampRaster class information from a file.
+
+        Args:
+            file_name (str): The input file.
+        """
         return self._instance.ReadFromFile(file_name)
 
 
 class WingWall(object):
-    def __init__(self, wing_wall_angle=None, **kwargs):
+    def __init__(self, wing_wall_angle=0, **kwargs):
         if 'instance' in kwargs:
             self._instance = kwargs['instance']
             return
 
         self._instance = XmWingWall(wing_wall_angle)
 
+    def __eq__(self, other):
+        other_instance = getattr(other, '_instance', None)
+        if not other_instance or not isinstance(other_instance, XmWingWall):
+            return False
+        return other_instance == self._instance
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        return not result
+
+    def __repr__(self):
+        return "<WingWall - wing_wall_angle: {}>".format(self.wing_wall_angle)
+
+    def __str__(self):
+        return "<WingWall - wing_wall_angle: {}>".format(self.wing_wall_angle)
+
     @property
     def wing_wall_angle(self):
+        """the angle of the wing_wall"""
         return self._instance.wingWallAngle
 
     @wing_wall_angle.setter
@@ -140,9 +257,22 @@ class WingWall(object):
         self._instance.wingWallAngle = value
 
     def write_to_file(self, file_name, card_name):
+        """
+        Writes the WingWall class information to a file.
+
+        Args:
+            file_name (str): The input file.
+            card_name (str): The card name to be written to the output file.
+        """
         return self._instance.WriteToFile(file_name, card_name)
 
     def read_from_file(self, file_name):
+        """
+        Reads the WingWall class information from a file.
+
+        Args:
+            file_name (str): The input file.
+        """
         return self._instance.ReadFromFile(file_name)
 
 
@@ -154,10 +284,28 @@ class SlopedAbutment(object):
 
         if not slope:
             slope = []
+
         self._instance = XmSlopedAbutment(max_x, slope)
+
+    def __eq__(self, other):
+        other_instance = getattr(other, '_instance', None)
+        if not other_instance or not isinstance(other_instance, XmSlopedAbutment):
+            return False
+        return other_instance == self._instance
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        return not result
+
+    def __repr__(self):
+        return "<SlopedAbutment - max_x: {}, slope: {}>".format(self.max_x, self.slope)
+
+    def __str__(self):
+        return "<SlopedAbutment - max_x: {}, slope: {}>".format(self.max_x, self.slope)
 
     @property
     def max_x(self):
+        """max distance from the center line"""
         return self._instance.maxX
 
     @max_x.setter
@@ -166,6 +314,7 @@ class SlopedAbutment(object):
 
     @property
     def slope(self):
+        """x, y pairs defining slope from the center line"""
         return self._instance.slope
 
     @slope.setter
@@ -173,42 +322,87 @@ class SlopedAbutment(object):
         self._instance.slope = value
 
     def write_to_file(self, file_name, card_name):
+        """
+        Writes the SlopedAbutment class information to a file.
+
+        Args:
+            file_name (str): The input file.
+            card_name (str): The card name to be written to the output file.
+        """
         return self._instance.WriteToFile(file_name, card_name)
 
     def read_from_file(self, file_name):
+        """
+        Reads the SlopedAbutment class information from a file.
+
+        Args:
+            file_name (str): The input file.
+        """
         return self._instance.ReadFromFile(file_name)
 
 
 class Guidebank(object):
-    def __init__(self, side=None, radius1=None, radius2=None,
-                 width=None, n_points=None, **kwargs):
+    def __init__(self, side='left', radius1=0, radius2=0,
+                 width=0, n_points=10, **kwargs):
         if 'instance' in kwargs:
             self._instance = kwargs['instance']
             return
 
         self._instance = XmGuidebank()
 
-        if side:
+        if side is not None:
             self.side = side
-        if radius1:
+        if radius1 is not None:
             self.radius1 = radius1
-        if radius2:
+        if radius2 is not None:
             self.radius2 = radius2
-        if width:
+        if width is not None:
             self.width = width
-        if n_points:
+        if n_points is not None:
             self.n_points = n_points
+
+    def __eq__(self, other):
+        other_instance = getattr(other, '_instance', None)
+        if not other_instance or not isinstance(other_instance, XmGuidebank):
+            return False
+        return other_instance == self._instance
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        return not result
+
+    def __repr__(self):
+        return "<Guidebank - side: {}, radius1: {}, radius2: {}, width: {}, n_points: {}>".format(
+            self.side, self.radius1, self.radius2, self.width, self.n_points
+        )
+
+    def __str__(self):
+        return "<Guidebank - side: {}, radius1: {}, radius2: {}, width: {}, n_points: {}>".format(
+            self.side, self.radius1, self.radius2, self.width, self.n_points
+        )
 
     @property
     def side(self):
-        return self._instance.side
+        """Position of guidebank relative to center line, left, or right"""
+        side_converter = {
+            0: 'left',
+            1: 'right',
+        }
+        return side_converter[self._instance.side]
 
     @side.setter
     def side(self, value):
-        self._instance.side = value
+        side_converter = {
+            'left': 0,
+            'right': 1,
+        }
+        if value not in side_converter.keys():
+            raise ValueError('side must be one of {}. Not {}.'.format(", ".join(side_converter.keys()), value))
+        self._instance.side = side_converter[value]
 
     @property
     def radius1(self):
+        """First radius (R1) for guidebank creation"""
         return self._instance.radius1
 
     @radius1.setter
@@ -217,6 +411,7 @@ class Guidebank(object):
 
     @property
     def radius2(self):
+        """Second radius (R2) for guidebank creation"""
         return self._instance.radius2
 
     @radius2.setter
@@ -225,6 +420,7 @@ class Guidebank(object):
 
     @property
     def width(self):
+        """Width of guidebank about the center line"""
         return self._instance.width
 
     @width.setter
@@ -232,17 +428,31 @@ class Guidebank(object):
         self._instance.width = value
 
     @property
-    def n_point(self):
+    def n_points(self):
+        """Number of points of guidebank about the center line"""
         return self._instance.nPts
 
-    @n_point.setter
-    def n_point(self, value):
+    @n_points.setter
+    def n_points(self, value):
         self._instance.nPts = value
 
     def write_to_file(self, file_name, card_name):
+        """
+        Writes the Guidebank class information to a file.
+
+        Args:
+            file_name (str): The input file.
+            card_name (str): The card name to be written to the output file.
+        """
         return self._instance.WriteToFile(file_name, card_name)
 
     def read_from_file(self, file_name):
+        """
+        Reads the Guidebank class information from a file.
+
+        Args:
+            file_name (str): The input file.
+        """
         return self._instance.ReadFromFile(file_name)
 
 
@@ -261,6 +471,16 @@ class EndCap(object):
 
         if angle is not None:
             self.angle = angle
+
+    def __eq__(self, other):
+        other_instance = getattr(other, '_instance', None)
+        if not other_instance or not isinstance(other_instance, XmStamperEndCap):
+            return False
+        return other_instance == self._instance
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        return not result
 
     def _get_endcap_type(self):
         end_cap_types = {
