@@ -492,18 +492,23 @@ class EndCap(object):
 
     @property
     def type(self):
+        """type of end cap"""
         return self._get_endcap_type()
 
     @property
     def angle(self):
+        """Angle of the endcap degrees from -45 to 45"""
         return self._instance.angle
 
     @angle.setter
     def angle(self, value):
+        if value < -45 or value > 45:
+            raise ValueError("angle must be less than -45 or greater than 45, not {}".format(value))
         self._instance.angle = value
 
     @property
     def endcap(self):
+        """The Guidebank, SlopedAbutment, or Wingwall represented in this EndCap"""
         if self.type == 'guidebank':
             return self._instance.guidebank
         elif self.type == 'sloped_abutment':
@@ -526,9 +531,22 @@ class EndCap(object):
             self._instance.wingWall = value._instance
 
     def write_to_file(self, file_name, card_name):
+        """
+        Writes the EndCap class information to a file.
+
+        Args:
+            file_name (str): The input file.
+            card_name (str): The card name to be written to the output file.
+        """
         return self._instance.WriteToFile(file_name, card_name)
 
     def read_from_file(self, file_name):
+        """
+        Reads the EndCap class information from a file.
+
+        Args:
+            file_name (str): The input file.
+        """
         return self._instance.ReadFromFile(file_name)
 
 
@@ -557,6 +575,7 @@ class CrossSection(object):
 
     @property
     def left(self):
+        """points defining the right side of the  cross section"""
         return self.left
 
     @left.setter
@@ -565,6 +584,7 @@ class CrossSection(object):
 
     @property
     def right(self):
+        """points defining the right side of the cross section"""
         return self._instance.left
 
     @right.setter
@@ -573,6 +593,7 @@ class CrossSection(object):
 
     @property
     def left_max(self):
+        """max x value for left side"""
         return self._instance.leftMax
 
     @left_max.setter
@@ -581,6 +602,7 @@ class CrossSection(object):
 
     @property
     def right_max(self):
+        """max x value for right side"""
         return self._instance.rightMax
 
     @right_max.setter
@@ -589,6 +611,7 @@ class CrossSection(object):
 
     @property
     def index_left_shoulder(self):
+        """index to the shoulder point in the left point list"""
         return self._instance.idxLeftShoulder
 
     @index_left_shoulder.setter
@@ -597,6 +620,7 @@ class CrossSection(object):
 
     @property
     def index_right_shoulder(self):
+        """index to the shoulder point in the right point list"""
         return self._instance.idxRightShoulder
 
     @index_right_shoulder.setter
@@ -604,9 +628,22 @@ class CrossSection(object):
         self._instance.idxRightShoulder = value
 
     def write_to_file(self, file_name, card_name):
+        """
+        Writes the CrossSection class information to a file.
+
+        Args:
+            file_name (str): The input file.
+            card_name (str): The card name to be written to the output file.
+        """
         return self._instance.WriteToFile(file_name, card_name)
 
     def read_from_file(self, file_name):
+        """
+        Reads the CrossSection class information from a file.
+
+        Args:
+            file_name (str): The input file.
+        """
         return self._instance.ReadFromFile(file_name)
 
 
@@ -616,7 +653,6 @@ class StamperIo(object):
         if 'instance' in kwargs:
             self._instance = kwargs['instance']
             return
-
 
         if center_line is None:
             raise ValueError("center_line is a required argument")
@@ -645,6 +681,7 @@ class StamperIo(object):
 
     @property
     def center_line(self):
+        """The center line for the stamping options"""
         return self._instance.centerLine
 
     @center_line.setter
@@ -653,6 +690,7 @@ class StamperIo(object):
 
     @property
     def stamping_type(self):
+        """The stamping type, cut, fill or both"""
         stamp_type = {
             0: "cut",
             1: "fill",
@@ -676,6 +714,7 @@ class StamperIo(object):
 
     @property
     def cs(self):
+        """The CrossSection for the stamping options"""
         _cs = [CrossSection(instance=x) for x in self._instance.cs]
         return _cs
 
@@ -686,6 +725,7 @@ class StamperIo(object):
 
     @property
     def first_end_cap(self):
+        """end cap at beginnig of polyline"""
         return EndCap(instance=self._instance.firstEndCap)
 
     @first_end_cap.setter
@@ -696,6 +736,7 @@ class StamperIo(object):
 
     @property
     def last_end_cap(self):
+        """end cap at end of polyline"""
         return EndCap(instance=self._instance.lastEndCap)
 
     @last_end_cap.setter
@@ -706,6 +747,7 @@ class StamperIo(object):
 
     @property
     def bathymetry(self):
+        """Underlying bathymetry"""
         return Tin(instance=self._instance.bathymetry)
 
     @bathymetry.setter
@@ -716,14 +758,17 @@ class StamperIo(object):
 
     @property
     def out_tin(self):
+        """the output from the stamping procedure"""
         return Tin(instance=self._instance.outTin)
 
     @property
     def out_breaklines(self):
+        """the output breaklines from the stamping procedure"""
         return self._instance.outBreaklines
 
     @property
     def raster(self):
+        """The raster to stamp the feature into"""
         return StampRaster(instance=self._instance.raster)
 
     @raster.setter
@@ -733,9 +778,22 @@ class StamperIo(object):
         self._instance.raster = value._instance
 
     def write_to_file(self, file_name, card_name):
+        """
+        Writes the StamperIo class information to a file.
+
+        Args:
+            file_name (str): The input file.
+            card_name (str): The card name to be written to the output file.
+        """
         return self._instance.WriteToFile(file_name, card_name)
 
     def read_from_file(self, file_name):
+        """
+        Reads the StamperIo class information from a file.
+
+        Args:
+            file_name (str): The input file.
+        """
         return self._instance.ReadFromFile(file_name)
 
     def set_precision_for_output(self, precision):
