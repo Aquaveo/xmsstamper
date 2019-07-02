@@ -2,5 +2,5 @@
 WingWall
 ********
 
-.. autoclass:: xmsstamper.stamper.WingWall
+.. autoclass:: xms.stamper.stamping.WingWall
    :members:

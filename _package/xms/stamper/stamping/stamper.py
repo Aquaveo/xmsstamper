@@ -7,7 +7,7 @@ def stamp(stamper_io):
     Performs the stamp using the options set in stamper_io
 
     Args:
-        stamper_io (StamperIo): options and settings used for stamping
+        stamper_io (:obj:`StamperIo <xms.stamper.stamping.StamperIo>`): options and settings used for stamping
     """
     if not isinstance(stamper_io, StamperIo):
         raise ValueError("input must be of type StamperIo")

@@ -1,6 +1,5 @@
 *******
-Stamper
+stamper
 *******
 
-.. autoclass:: xmsstamper.stamper.stamper
-   :members:
+.. :: xms.stamper.stamping.stamper

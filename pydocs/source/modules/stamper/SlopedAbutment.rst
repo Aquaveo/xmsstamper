@@ -2,5 +2,5 @@
 SlopedAbutment
 **************
 
-.. autoclass:: xmsstamper.stamper.SlopedAbutment
+.. autoclass:: xms.stamper.stamping.SlopedAbutment
    :members:

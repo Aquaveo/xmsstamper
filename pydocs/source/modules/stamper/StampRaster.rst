@@ -2,5 +2,5 @@
 StampRaster
 ***********
 
-.. autoclass:: xmsstamper.stamper.StampRaster
+.. autoclass:: xms.stamper.stamping.StampRaster
    :members:

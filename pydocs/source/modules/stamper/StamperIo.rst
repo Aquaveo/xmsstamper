@@ -2,5 +2,5 @@
 StamperIo
 *********
 
-.. autoclass:: xmsstamper.stamper.StamperIo
+.. autoclass:: xms.stamper.stamping.StamperIo
    :members:

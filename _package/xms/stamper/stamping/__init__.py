@@ -1,3 +1,4 @@
+from . import stamper
 from .stamper import stamp
 from .stamper_io import StampRaster
 from .stamper_io import WingWall

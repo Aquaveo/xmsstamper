@@ -11,6 +11,16 @@ from xms.grid._xmsgrid.triangulate import TrTin
 
 
 class StampRaster(object):
+    """
+    Args:
+        num_pixes_x (int, required): *see documentation below*
+        num_pixels_y (int, required): *see documentation below*
+        pixel_size_x (int, required): *see documentation below*
+        pixel_size_y (int, required): *see documentation below*
+        min_point (iterable, required): *see documentation below*
+        vals (iterable, required): *see documentation below*
+        no_data (float): *see documentation below* default is nan
+    """
     def __init__(self, num_pixels_x=None, num_pixels_y=None, pixel_size_x=None, pixel_size_y=None,
                  min_point=None, vals=None, no_data=float('nan'), **kwargs):
         if 'instance' in kwargs:
@@ -224,6 +234,10 @@ class StampRaster(object):
 
 
 class WingWall(object):
+    """
+    Args:
+        wing_wall_angle (float): *see documentation below* Default is 0
+    """
     def __init__(self, wing_wall_angle=0, **kwargs):
         if 'instance' in kwargs:
             self._instance = kwargs['instance']
@@ -277,6 +291,11 @@ class WingWall(object):
 
 
 class SlopedAbutment(object):
+    """
+    Args:
+        max_x (float): *see documentation below*
+        slope (iterable): *see documentation below*
+    """
     def __init__(self, max_x=0, slope=None, **kwargs):
         if 'instance' in kwargs:
             self._instance = kwargs['instance']
@@ -342,6 +361,14 @@ class SlopedAbutment(object):
 
 
 class Guidebank(object):
+    """
+    Args:
+        side (str): *see documentation below*
+        radius1 (float): *see documentation below*
+        radius2 (float): *see documentation below*
+        width (float): *see documentation below*
+        n_points (int): *see documentation below*
+    """
     def __init__(self, side='left', radius1=0, radius2=0,
                  width=0, n_points=10, **kwargs):
         if 'instance' in kwargs:
@@ -457,6 +484,11 @@ class Guidebank(object):
 
 
 class EndCap(object):
+    """
+    Args:
+        endcap (object): *see documentation below*
+        angle (float): *see documentation below*
+    """
     def __init__(self, endcap=None, angle=None, **kwargs):
         if 'instance' in kwargs:
             self._instance = kwargs['instance']
@@ -551,8 +583,17 @@ class EndCap(object):
 
 
 class CrossSection(object):
-    def __init__(self, right=None, left=None, right_max=None, left_max=None, index_left_shoulder=None,
-                 index_right_shoulder=None, **kwargs):
+    """
+    Args:
+        right (int, required): *see documentation below*
+        left (int, required): *see documentation below*
+        right_max (iterable): *see documentation below*
+        left_max (iterable): *see documentation below*
+        index_right_shoulder (int): *see documentation below*
+        index_left_shoulder (int): *see documentation below*
+    """
+    def __init__(self, right=None, left=None, right_max=None, left_max=None, index_right_shoulder=None,
+                 index_left_shoulder=None, **kwargs):
         if 'instance' in kwargs:
             self._instance = kwargs['instance']
             return
@@ -648,6 +689,16 @@ class CrossSection(object):
 
 
 class StamperIo(object):
+    """
+    Args:
+        center_line (iterable): *see documentation below*
+        stamping_type (str): *see documentation below*
+        cs (:obj:`CrossSection <xms.stamper.stamping.CrossSection>`): *see documentation below*
+        first_end_cap (:obj:`EndCap <xms.stamper.stamping.EndCap>`): *see documentation below*
+        last_end_cap (:obj:`EndCap <xms.stamper.stamping.EndCap>`): *see documentation below*
+        bathymetry (:obj:`Tin <xms.grid.triangulate.Tin>`): *see documentation below*
+        raster (:obj:`StampRaster <xms.stamper.stamping.StampRaster>`): *see documentation below*
+    """
     def __init__(self, center_line=None, stamping_type=None, cs=None, first_end_cap=None, last_end_cap=None,
                  bathymetry=None, raster=None, **kwargs):
         if 'instance' in kwargs:

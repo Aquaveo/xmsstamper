@@ -9,7 +9,6 @@ from conans.errors import ConanException
 class XmsstamperConan(ConanFile):
     """XMSStamper Conanfile"""
     name = "xmsstamper"
-    # version = None  # This doesn't work with the new version of conan
     license = "FreeBSD Software License"
     url = "https://github.com/Aquaveo/xmsstamper"
     description = "Stamping library for XMS products"
@@ -23,7 +22,7 @@ class XmsstamperConan(ConanFile):
     generators = "cmake"
     build_requires = "cxxtest/4.4@aquaveo/stable"
     exports = "CMakeLists.txt", "LICENSE", "test_files/*"
-    exports_sources = "xmsstamper/*", "test_files/*"
+    exports_sources = "xmsgrid/*", "test_files/*", "_package/*"
 
     def configure(self):
         # Set version dynamically using XMS_VERSION env variable.
@@ -107,18 +106,32 @@ class XmsstamperConan(ConanFile):
         elif self.options.pybind:
             with tools.pythonpath(self):
                 if not self.settings.os == "Macos":
-                    self.run('pip install --user numpy')
+                  self.run('pip install --user numpy twine wheel')
                 else:
-                    self.run('pip install numpy')
-                self.run('python -m unittest discover -v -p' \
-                         '*_pyt.py -s ../xmsstamper/python', cwd="./lib")
+                  self.run('pip install numpy twine wheel')
+                self.run('python -m unittest discover -v -p *_pyt.py -s {}/_package/tests'.format(
+                    os.path.join(self.build_folder)), cwd=os.path.join(self.package_folder, "_package"))
+                # Create and upload wheel to PyPi if release and windows
+                is_release = self.env.get("RELEASE_PYTHON", 'False')
+                if is_release == 'True' and ((self.settings.os == "Macos" or self.settings.os == "Linux")
+                                             or (self.settings.os == "Windows" and
+                                             str(self.settings.compiler.runtime) == "MD")):
+                    devpi_url = self.env.get("AQUAPI_URL", 'NO_URL')
+                    devpi_username = self.env.get("AQUAPI_USERNAME", 'NO_USERNAME')
+                    devpi_password = self.env.get("AQUAPI_PASSWORD", 'NO_PASSWORD')
+                    self.run('devpi use {}'.format(devpi_url))
+                    self.run('devpi login {} --password {}'.format(devpi_username, devpi_password))
+                    plat_names = {'Windows': 'win_amd64', 'Linux': 'linux_x86_64', "Macos": 'macosx-10.6-intel'}
+                    self.run('python setup.py bdist_wheel --plat-name={} --dist-dir {}'.format(
+                        plat_names[str(self.settings.os)],
+                        os.path.join(self.build_folder, "dist")), cwd=os.path.join(self.package_folder, "_package"))
+                    self.run('devpi upload --from-dir {}'.format(os.path.join(self.build_folder, "dist")), cwd=".")
 
     def package(self):
         self.copy("license", dst="licenses", ignore_case=True, keep_path=False)
 
     def package_info(self):
-        self.env_info.PYTHONPATH.append(os.path.join(self.package_folder,
-                                                     "site-packages"))
+        self.env_info.PYTHONPATH.append(os.path.join(self.package_folder,  "_package"))
         if self.settings.build_type == 'Debug':
             self.cpp_info.libs = ["xmsstamperlib_d"]
         else:
