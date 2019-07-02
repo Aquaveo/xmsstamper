@@ -22,7 +22,7 @@ class XmsstamperConan(ConanFile):
     generators = "cmake"
     build_requires = "cxxtest/4.4@aquaveo/stable"
     exports = "CMakeLists.txt", "LICENSE", "test_files/*"
-    exports_sources = "xmsgrid/*", "test_files/*", "_package/*"
+    exports_sources = "xmsstamper/*", "test_files/*", "_package/*"
 
     def configure(self):
         # Set version dynamically using XMS_VERSION env variable.
