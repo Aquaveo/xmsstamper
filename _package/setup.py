@@ -22,7 +22,7 @@ requires = [
 version = __version__
 
 setup(
-    python_requires='==3.6.*',
+    python_requires='>=3.6',
     name='xmsstamper',
     version=version,
     packages=['xms.stamper', 'xms.stamper.stamping', 'xms.stamper.api'],
