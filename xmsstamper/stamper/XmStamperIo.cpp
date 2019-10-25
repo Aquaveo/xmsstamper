@@ -273,7 +273,7 @@ XmStampRaster::XmStampRaster(const int a_numPixelsX, const int a_numPixelsY, con
   , m_pixelSizeY(a_pixelSizeY)
   , m_min(a_min)
   , m_vals(a_vals)
-  , m_noData(a_noData)
+  , m_noData((float)a_noData)
 {
 } // XmStampRaster::XmStampRaster
 //------------------------------------------------------------------------------

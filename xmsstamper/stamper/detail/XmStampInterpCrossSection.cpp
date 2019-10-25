@@ -122,7 +122,7 @@ void XmStampInterpCrossSectionImpl::InterpMissingCrossSections(XmStamperIo& a_)
   }
   int last = FindLastValidCrossSection();
   // copy this cross section to any after it
-  for (size_t i = (size_t)(last + 1); i < m_io->m_cs.size(); ++i)
+  for (size_t i = (size_t)(last + 1); last >= 0 && i < m_io->m_cs.size(); ++i)
   {
     m_io->m_cs[i] = m_io->m_cs[last];
   }
@@ -564,8 +564,39 @@ void XmStampInterpCrossSectionUnitTests::test1()
   TS_ASSERT_EQUALS(4, io.m_cs[3].m_idxLeftShoulder);
   TS_ASSERT_DELTA_VECPT2D(baseCs, io.m_cs[3].m_right, 1e-2);
   TS_ASSERT_EQUALS(4, io.m_cs[3].m_idxRightShoulder);
-} // XmStampInterpCrossSectionUnitTests::test0
+} // XmStampInterpCrossSectionUnitTests::test1
 //! [snip_test_Example_XmStamper_Test1]>
+//------------------------------------------------------------------------------
+/// \brief Tests where only 1 cross section specified
+//------------------------------------------------------------------------------
+void XmStampInterpCrossSectionUnitTests::test2()
+{
+  XmStamperIo io;
+  io.m_centerLine = { { 0, 0 }, { 5, 0 }, { 10, 0 }, { 15, 0 }, { 20, 0 }, { 25, 0 } };
+  io.m_cs.assign(6, XmStampCrossSection());
+  XmStampCrossSection cs;
+  io.m_stampingType = 0;
+  cs.m_left = { { 0, 10 }, { 1, 11 }, { 2, 12 }, { 4, 11 }, { 5, 10 }, { 10, 5 }, { 15, 0 } };
+  cs.m_idxLeftShoulder = 0;
+  cs.m_right = cs.m_left;
+  cs.m_idxRightShoulder = cs.m_idxLeftShoulder;
+  io.m_cs[0] = cs;
+
+  XmStampInterpCrossSectionImpl ip;
+  ip.InterpMissingCrossSections(io);
+  TS_ASSERT_EQUALS_VEC(io.m_cs[5].m_left, io.m_cs[0].m_left);
+  TS_ASSERT_EQUALS(1, io.m_cs[5].m_idxLeftShoulder);
+  TS_ASSERT_EQUALS_VEC(io.m_cs[5].m_right, io.m_cs[0].m_right);
+  TS_ASSERT_EQUALS(1, io.m_cs[5].m_idxRightShoulder);
+
+  io.m_cs.assign(6, XmStampCrossSection());
+  io.m_cs[5] = cs;
+  ip.InterpMissingCrossSections(io);
+  TS_ASSERT_EQUALS_VEC(io.m_cs[5].m_left, io.m_cs[0].m_left);
+  TS_ASSERT_EQUALS(1, io.m_cs[0].m_idxLeftShoulder);
+  TS_ASSERT_EQUALS_VEC(io.m_cs[5].m_right, io.m_cs[0].m_right);
+  TS_ASSERT_EQUALS(1, io.m_cs[0].m_idxRightShoulder);
+} // XmStampInterpCrossSectionUnitTests::test1
 //------------------------------------------------------------------------------
 /// \brief Test tutorial for symmetric cross section interpolation
 //------------------------------------------------------------------------------
