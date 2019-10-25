@@ -122,7 +122,7 @@ void XmStampInterpCrossSectionImpl::InterpMissingCrossSections(XmStamperIo& a_)
   }
   int last = FindLastValidCrossSection();
   // copy this cross section to any after it
-  for (size_t i = (size_t)(last + 1); last > 0 && i < m_io->m_cs.size(); ++i)
+  for (size_t i = (size_t)(last + 1); i < m_io->m_cs.size(); ++i)
   {
     m_io->m_cs[i] = m_io->m_cs[last];
   }
