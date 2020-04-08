@@ -67,9 +67,9 @@ class XmsstamperConan(ConanFile):
             self.requires("pybind11/2.2.2@aquaveo/stable")
 
         # Use the dev version of XMSCore, XMSInterp, XMSGrid, XMSExtractor
-        self.requires("xmscore/[>=3.0.5,<4.0.0]@aquaveo/stable")
-        self.requires("xmsgrid/[>=3.0.3,<5.0.0]@aquaveo/stable")
-        self.requires("xmsinterp/[>=3.0.3,<4.0]@aquaveo/stable")
+        self.requires("xmscore/3.1.1@aquaveo/stable")
+        self.requires("xmsgrid/4.2.0@aquaveo/stable")
+        self.requires("xmsinterp/3.1.1@aquaveo/stable")
 
     def build(self):
         cmake = CMake(self)
