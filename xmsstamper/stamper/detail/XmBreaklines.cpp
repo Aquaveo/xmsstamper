@@ -123,6 +123,7 @@ bool XmBreaklinesImpl::CreateBreaklines(XmStamperIo& a_io, cs3dPtIdx& a_ptIdx, V
   {
     VecInt ixs;
     // reverse add the left side
+	if (i < a_ptIdx.m_xsPts.m_left.size())
     {
       auto p = a_ptIdx.m_xsPts.m_left[i].rbegin();
       auto end = a_ptIdx.m_xsPts.m_left[i].rend();
@@ -132,6 +133,7 @@ bool XmBreaklinesImpl::CreateBreaklines(XmStamperIo& a_io, cs3dPtIdx& a_ptIdx, V
     // put in the center line point
     ixs.push_back(a_ptIdx.m_centerLine[i]);
     // forward add the right side
+	if (i < a_ptIdx.m_xsPts.m_right.size())
     {
       auto p = a_ptIdx.m_xsPts.m_right[i].begin();
       auto end = a_ptIdx.m_xsPts.m_right[i].end();
@@ -152,6 +154,7 @@ bool XmBreaklinesImpl::CreateBreaklines(XmStamperIo& a_io, cs3dPtIdx& a_ptIdx, V
     }
 
     // left side shoulder and endpts
+	if (i < a_ptIdx.m_xsPts.m_left.size())
     {
       VecInt& v(a_ptIdx.m_xsPts.m_left[i]);
       int leftIdx = std::max(a_io.m_cs[i].m_idxLeftShoulder - 1, 0);
@@ -172,6 +175,7 @@ bool XmBreaklinesImpl::CreateBreaklines(XmStamperIo& a_io, cs3dPtIdx& a_ptIdx, V
       }
     }
     // right side shoulder and endpts
+	if (i < a_ptIdx.m_xsPts.m_right.size())
     {
       VecInt& v(a_ptIdx.m_xsPts.m_right[i]);
       int rightIdx = std::max(a_io.m_cs[i].m_idxRightShoulder - 1, 0);

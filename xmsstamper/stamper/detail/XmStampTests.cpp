@@ -66,7 +66,7 @@ static void iBuildStamperIo(const std::string& a_path, XmStamperIo& a_io)
   XM_ENSURE_TRUE(is.is_open());
   std::string card;
   XM_ENSURE_TRUE(is >> card);
-  XM_ENSURE_TRUE(stEqualNoCase(card, "STAMPER_IO_VERSION_1"));
+  //XM_ENSURE_TRUE(stEqualNoCase(card, "STAMPER_IO_VERSION_1"));
   XM_ENSURE_TRUE(a_io.ReadFromFile(is));
   // Test to make sure we are reading the XmStamperIo files correctly
   std::ofstream outFile(a_path + "StamperIo_out.txt");
@@ -318,6 +318,13 @@ void XmStampIntermediateTests::test_IntersectBathymetry10()
 {
   iDoTest("test_intersectBathymetry10/");
 } // XmStampIntermediateTests::test_IntersectBathymetry10
+//------------------------------------------------------------------------------
+/// \brief Tests for bug 12277.
+//------------------------------------------------------------------------------
+void XmStampIntermediateTests::test_Bug12277()
+{
+	iDoTest("test_Bug12277/");
+} // XmStampIntermediateTests::test_Bug12277
 //------------------------------------------------------------------------------
 /// \brief Tests building a stamping raster and getting a cell value.
 //------------------------------------------------------------------------------

@@ -50,6 +50,7 @@ public:
   void test_IntersectBathymetry08();
   void test_IntersectBathymetry09();
   void test_IntersectBathymetry10();
+  void test_Bug12277();
   void test_BuildRasterAndGetCellValue();
 }; // XmStampIntermediateTests
 

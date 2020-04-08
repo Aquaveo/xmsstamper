@@ -379,7 +379,7 @@ void XmStamperImpl::ConvertCrossSectionsTo3d()
 //------------------------------------------------------------------------------
 void XmStamperImpl::ConvertEndCapsTo3d()
 {
-  XM_ENSURE_TRUE(!m_3dpts.m_xsPts.m_left.empty() && !m_3dpts.m_xsPts.m_right.empty());
+  XM_ENSURE_TRUE_NO_ASSERT(!m_3dpts.m_xsPts.m_left.empty() && !m_3dpts.m_xsPts.m_right.empty());
 
   BSHP<XmStampEndCap> cap = XmStampEndCap::New();
   cap->RotateEndCapCrossSections(m_io, m_3dpts.m_xsPts.m_left, m_3dpts.m_xsPts.m_right);
