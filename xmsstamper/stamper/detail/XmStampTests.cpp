@@ -66,7 +66,7 @@ static void iBuildStamperIo(const std::string& a_path, XmStamperIo& a_io)
   XM_ENSURE_TRUE(is.is_open());
   std::string card;
   XM_ENSURE_TRUE(is >> card);
-  //XM_ENSURE_TRUE(stEqualNoCase(card, "STAMPER_IO_VERSION_1"));
+  XM_ENSURE_TRUE(stEqualNoCase(card, "STAMPER_IO_VERSION_1"));
   XM_ENSURE_TRUE(a_io.ReadFromFile(is));
   // Test to make sure we are reading the XmStamperIo files correctly
   std::ofstream outFile(a_path + "StamperIo_out.txt");
