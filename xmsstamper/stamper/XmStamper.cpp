@@ -422,6 +422,11 @@ bool XmStamperImpl::CreateOutputs()
   client.SetObserver(m_observer);
   if (!client.Triangulate())
     return false;
+  if (m_io.m_outTin && m_io.m_outTin->NumTriangles() < 1)
+  {
+    m_io.m_outTin.reset();
+    return false;
+  }
 
   // force in the breaklines
   BSHP<TrBreaklineAdder> bl = TrBreaklineAdder::New();
@@ -506,7 +511,7 @@ bool XmStamperImpl::CreateBreakLines(cs3dPtIdx& a_ptIdx)
 //------------------------------------------------------------------------------
 void XmStamperImpl::AppendTinAndBreakLines(bool a_errors)
 {
-  if (!m_tin)
+  if (!m_tin && m_io.m_outTin)
   {
     m_tin = m_io.m_outTin;
     m_breaklines = m_io.m_outBreakLines;

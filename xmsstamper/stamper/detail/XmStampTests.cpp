@@ -326,6 +326,13 @@ void XmStampIntermediateTests::test_Bug12277()
 	iDoTest("test_Bug12277/");
 } // XmStampIntermediateTests::test_Bug12277
 //------------------------------------------------------------------------------
+/// \brief Tests for bug 12337.
+//------------------------------------------------------------------------------
+void XmStampIntermediateTests::test_Bug12337()
+{
+  iDoTest("test_Bug12337/");
+} // XmStampIntermediateTests::test_Bug12337
+//------------------------------------------------------------------------------
 /// \brief Tests building a stamping raster and getting a cell value.
 //------------------------------------------------------------------------------
 void XmStampIntermediateTests::test_BuildRasterAndGetCellValue()
