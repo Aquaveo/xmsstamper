@@ -1,7 +1,5 @@
-"""
-Python for the xms.stamper library
-"""
-from . import stamping
-from .api.stamp import stamp
+"""Initialize the module."""
+from . import stamping  # NOQA: F401
+from .api.stamp import stamp  # NOQA: F401
 
 __version__ = '4.0.0'

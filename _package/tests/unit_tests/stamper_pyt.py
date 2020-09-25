@@ -1,15 +1,19 @@
-"""Test Stamper_py.cpp"""
-import unittest
-import numpy as np
+"""Test Stamper_py.cpp."""
 import os
+import unittest
+
+import numpy as np
+
+import xms.grid as xmsgrid
+
 import xms.stamper
 from xms.stamper import stamping
-import xms.grid as xmsgrid
 
 
 class TestStamper(unittest.TestCase):
-    """Stamper tests"""
+    """Stamper tests."""
     def setUp(self):
+        """Runs before each test."""
         script_file = os.path.abspath(os.path.realpath(__file__))
         script_path = os.path.dirname(script_file)
         self.base_file_path = os.path.join(
@@ -29,8 +33,13 @@ class TestStamper(unittest.TestCase):
         self.assertTrue(os.path.isdir(self.output_file_path),
                         "Could not create output file directory")
 
-    def assertFilesEqual(self, base, out):
-        """check files are equal"""
+    def assert_files_equal(self, base, out):
+        """Check files are equal.
+
+        Args:
+            base (str): Path to the baseline file
+            out (str): Path to the output file
+        """
         self.assertTrue(os.path.isfile(base), "Base file '{}' does not exist".format(base))
         self.assertTrue(os.path.isfile(out), "Out file '{}' does not exist".format(out))
 
@@ -43,7 +52,7 @@ class TestStamper(unittest.TestCase):
         self.assertEqual(base_file, out_file)
 
     def test_stamp_fill_embankment(self):
-        """Test stamp fill embankment"""
+        """Test stamp fill embankment."""
         # Type and centerline
         io_stamping_type = "fill"
         io_centerline = ((0, 0, 15), (0, 10, 15))
@@ -101,13 +110,13 @@ class TestStamper(unittest.TestCase):
         io.raster.write_grid_file(output_file, 'ascii')
 
         # Verify grid file
-        self.assertFilesEqual(base_file, output_file)
+        self.assert_files_equal(base_file, output_file)
 
         # Verify outputs
         self.assertEqual(7, len(io.out_breaklines))
 
         breaklines = [
-            (0, 1), (3, 2, 0, 6, 7), (5, 4, 1, 8, 9), (3, 5), (7, 9), 
+            (0, 1), (3, 2, 0, 6, 7), (5, 4, 1, 8, 9), (3, 5), (7, 9),
             (2, 4), (6, 8)
         ]
 
@@ -115,7 +124,7 @@ class TestStamper(unittest.TestCase):
             self.assertEqual(io.out_breaklines[i], breaklines[i])
 
     def test_stamp_cut_embankment(self):
-        """Test stamp cut embankment"""
+        """Test stamp cut embankment."""
         # Type and centerline
         io_stamping_type = "cut"
         io_centerline = ((0, 0, 0), (0, 10, 0))
@@ -180,13 +189,13 @@ class TestStamper(unittest.TestCase):
         io.raster.write_grid_file(output_file, 'ascii')
 
         # Verify grid file
-        self.assertFilesEqual(base_file, output_file)
+        self.assert_files_equal(base_file, output_file)
 
         # Verify outputs
         self.assertEqual(7, len(io.out_breaklines))
 
         breaklines = [
-            (0, 1), (3, 2, 0, 6, 7), (5, 4, 1, 8, 9), (3, 5), (7, 9), 
+            (0, 1), (3, 2, 0, 6, 7), (5, 4, 1, 8, 9), (3, 5), (7, 9),
             (2, 4), (6, 8)
         ]
 
@@ -194,7 +203,7 @@ class TestStamper(unittest.TestCase):
             self.assertEqual(io.out_breaklines[i], breaklines[i])
 
     def test_stamp_wing_wall(self):
-        """Test stamp wing wall"""
+        """Test stamp wing wall."""
         # Type and centerline
         io_stamping_type = 'fill'
         io_centerline = ((0, 0, 15), (20, 20, 15))
@@ -275,7 +284,7 @@ class TestStamper(unittest.TestCase):
         io.raster.write_grid_file(output_file, 'ascii')
 
         # Verify grid file
-        self.assertFilesEqual(base_file, output_file)
+        self.assert_files_equal(base_file, output_file)
 
         # Verify outputs
         self.assertEqual(7, len(io.out_breaklines))
@@ -289,7 +298,7 @@ class TestStamper(unittest.TestCase):
             self.assertEqual(io.out_breaklines[i], breaklines[i])
 
     def test_stamp_sloped_abutment(self):
-        """Test stamp sloped abutment"""
+        """Test stamp sloped abutment."""
         # Type and centerline
         io_stamping_type = 'fill'
         io_centerline = ((0, 0, 15), (20, 20, 15))
@@ -368,7 +377,7 @@ class TestStamper(unittest.TestCase):
         io.raster.write_grid_file(output_file, 'ascii')
 
         # Verify grid file
-        self.assertFilesEqual(base_file, output_file)
+        self.assert_files_equal(base_file, output_file)
 
         base_pts = ((0, 0, 15), (20, 20, 15), (-3.5, 3.5, 15), (-14.1, 14.1, 0),
                     (15.2, 22.2, 15), (4.6, 32.9, 0), (3.5, -3.5, 15),
@@ -386,7 +395,7 @@ class TestStamper(unittest.TestCase):
                                              decimal=1)
 
     def test_stamp_guide_bank(self):
-        """Test stamp guidebank"""
+        """Test stamp guidebank."""
         # Type and centerline
         io_stamping_type = 'fill'
         io_centerline = ((0, 0, 15), (50, 50, 15))
@@ -469,10 +478,10 @@ class TestStamper(unittest.TestCase):
         io.raster.write_grid_file(output_file, 'ascii')
 
         # Verify grid file
-        self.assertFilesEqual(base_file, output_file)
+        self.assert_files_equal(base_file, output_file)
 
     def test_stamp_intersect_bathymetry(self):
-        """Test stamp guidebank"""
+        """Test stamp guidebank."""
         # Type and centerline
         io_stamping_type = 'fill'
         io_centerline = ((0, 0, 15), (10, 10, 15))
@@ -544,7 +553,7 @@ class TestStamper(unittest.TestCase):
         io.raster.write_grid_file(output_file, 'ascii')
 
         # Verify grid file
-        self.assertFilesEqual(base_file, output_file)
+        self.assert_files_equal(base_file, output_file)
 
         base_pts = ((0, 0, 15), (10, 10, 15), (-3.54, 3.54, 15),
                     (-9.42, 9.42, 6.68), (6.46, 13.54, 15), (-4.14, 24.14, 0),

@@ -1,6 +1,8 @@
+"""Placeholder for xmsstamper api."""
+
+
 def stamp():
-    """
-    Test status
+    """Test status.
 
     Returns:
         get this going

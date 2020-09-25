@@ -1,7 +1,7 @@
-"""Test UGrid2dDataExtractor_py.cpp"""
+"""Test UGrid2dDataExtractor_py.cpp."""
 import unittest
-import xms.stamper
-import numpy as np
+
 
 class TestStamperIo(unittest.TestCase):
+    """Placeholder for StamperIo tests."""
     pass
