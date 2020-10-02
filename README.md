@@ -7,9 +7,7 @@ Support library for XMS products
 Master Branch Status
 --------------------
 
-![Linux-CI](https://github.com/Aquaveo/xmsstamper/workflows/Linux-CI/badge.svg)
-![Mac-CI](https://github.com/Aquaveo/xmsstamper/workflows/Mac-CI/badge.svg)
-![Windows-CI](https://github.com/Aquaveo/xmsstamper/workflows/Windows-CI/badge.svg)
+![XmsStamper-CI](https://github.com/Aquaveo/xmsstamper/workflows/XmsStamper-4.0/badge.svg)
 
 
 Prerequisites
