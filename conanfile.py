@@ -67,6 +67,11 @@ class XmsstamperConan(ConanFile):
         self.requires("xmsgrid/5.0.5@aquaveo/stable")
         self.requires("xmsinterp/4.0.1@aquaveo/stable")
 
+        if self.settings.os == 'Macos':
+            # Use conan-center-index syntax for Mac
+            # TODO: Use bzip2 package from Aquaveo server when available.
+            self.requires('bzip2/1.0.8')
+
     def build(self):
         cmake = CMake(self)
 
