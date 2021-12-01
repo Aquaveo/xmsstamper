@@ -229,15 +229,6 @@ void XmStamperImpl::DoStamp(XmStamperIo& a_io)
     AppendTinAndBreakLines(!rval);
   }
 
-  if (!m_error && m_breaklineCreator && m_outPts)
-  {
-    m_error = m_breaklineCreator->BreaklinesIntersect(m_breaklines, *m_outPts);
-    if (m_error)
-    {
-      XM_LOG(xmlog::warning, "Intersection found in stamp outputs. Stamping operation aborted.");
-    }
-  }
-
   if (!m_error)
   {
     a_io.m_outBreakLines = m_breaklines;
@@ -428,15 +419,28 @@ bool XmStamperImpl::CreateOutputs()
     return false;
   }
 
-  // force in the breaklines
-  BSHP<TrBreaklineAdder> bl = TrBreaklineAdder::New();
-  bl->SetTin(m_io.m_outTin);
-  bl->AddBreaklines(m_io.m_outBreakLines);
+  if (!m_error && m_io.m_outBreakLines.size() > 0 && m_io.m_outTin && m_io.m_outTin->PointsPtr())
+  {
+    VecPt3d& pts(*m_io.m_outTin->PointsPtr());
+    m_error = m_breaklineCreator->BreaklinesIntersect(m_io.m_outBreakLines, pts);
+    if (m_error)
+    {
+      XM_LOG(xmlog::warning, "Intersection found in stamp outputs. Stamping operation aborted.");
+    }
+  }
 
-  // delete triangles outside the outer boundary
-  BSHP<TrOuterTriangleDeleter> deleter = TrOuterTriangleDeleter::New();
-  VecInt2d poly(1, m_breaklineCreator->GetOuterPolygon());
-  deleter->Delete(poly, m_io.m_outTin);
+  if (!m_error)
+  {
+    // force in the breaklines
+    BSHP<TrBreaklineAdder> bl = TrBreaklineAdder::New();
+    bl->SetTin(m_io.m_outTin);
+    bl->AddBreaklines(m_io.m_outBreakLines);
+
+    // delete triangles outside the outer boundary
+    BSHP<TrOuterTriangleDeleter> deleter = TrOuterTriangleDeleter::New();
+    VecInt2d poly(1, m_breaklineCreator->GetOuterPolygon());
+    deleter->Delete(poly, m_io.m_outTin);
+  }
 
   return true;
 } // XmStamperImpl::CreateOutputs
