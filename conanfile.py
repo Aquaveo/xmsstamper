@@ -18,7 +18,7 @@ class XmsstamperConan(ConanFile):
     default_options = {
         'xms': False,
         'pybind': False,
-        'testing': False
+        'testing': False,
     }
     generators = "cmake", "txt"
     build_requires = "cxxtest/4.4@aquaveo/stable"
