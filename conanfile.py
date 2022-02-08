@@ -70,7 +70,7 @@ class XmsstamperConan(ConanFile):
 
         self.options['xmsgrid'].pybind = self.options.pybind
         self.options['xmsgrid'].testing = self.options.testing
-        
+
         if s_compiler == 'Visual Studio':
             self.options['xmscore'].wchar_t = self.options.wchar_t
             self.options['xmsinterp'].wchar_t = self.options.wchar_t
@@ -94,7 +94,7 @@ class XmsstamperConan(ConanFile):
 
         # Version Info
         cmake.definitions["XMS_VERSION"] = '{}'.format(self.version)
-        cmake.definitions["PYTHON_TARGET_VERSION"] = self.env.get("PYTHON_TARGET_VERSION", "3.6")
+        cmake.definitions["PYTHON_TARGET_VERSION"] = self.env.get("PYTHON_TARGET_VERSION", "3.10")
 
         if self.settings.compiler == 'Visual Studio':
             cmake.definitions["USE_NATIVE_WCHAR_T"] = (self.options.wchar_t == 'builtin')
@@ -211,8 +211,8 @@ class XmsstamperConan(ConanFile):
         self.requires("boost/1.74.0.3@aquaveo/stable")
 
         if self.options.pybind:
-            self.requires("pybind11/2.5.0@aquaveo/testing")
+            self.requires("pybind11/2.9.1@aquaveo/stable")
 
-        self.requires("xmscore/5.0.1@aquaveo/stable")
-        self.requires("xmsgrid/6.0.0@aquaveo/stable")
-        self.requires("xmsinterp/5.0.0@aquaveo/stable")
+        self.requires("xmscore/6.0.0@aquaveo/stable")
+        self.requires("xmsgrid/7.0.0@aquaveo/stable")
+        self.requires("xmsinterp/6.0.0@aquaveo/stable")
