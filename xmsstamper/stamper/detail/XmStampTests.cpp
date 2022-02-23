@@ -333,6 +333,13 @@ void XmStampIntermediateTests::test_Bug12337()
   iDoTest("test_Bug12337/");
 } // XmStampIntermediateTests::test_Bug12337
 //------------------------------------------------------------------------------
+/// \brief Tests for bug 12337.
+//------------------------------------------------------------------------------
+void XmStampIntermediateTests::test_Bug13552()
+{
+  iDoTest("test_Bug13552/");
+} // XmStampIntermediateTests::test_Bug13552
+//------------------------------------------------------------------------------
 /// \brief Tests building a stamping raster and getting a cell value.
 //------------------------------------------------------------------------------
 void XmStampIntermediateTests::test_BuildRasterAndGetCellValue()

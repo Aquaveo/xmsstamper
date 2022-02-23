@@ -277,6 +277,18 @@ void XmSlopedAbutmentUtilImpl::EndCapCrossSectionShouldersTo2dCrossSection()
     m_csRight.m_right.back().x -= x;
   }
   m_csRight.m_rightMax = m_cs.m_rightMax - x;
+  if (m_csLeft.m_leftMax <= 0.0 || m_csRight.m_rightMax <= 0.0)
+  {
+    std::string msg =
+      "The cross section associated with the sloped abutment is "
+      "poorly defined. The shoulder should not be the last point "
+      "on the cross section with a sloped abutment end cap.";
+    XM_LOG(xmlog::error, msg);
+    if (m_csLeft.m_leftMax <= 0.0)
+      m_csLeft.m_leftMax = 1.0;
+    if (m_csRight.m_rightMax <= 0.0)
+      m_csRight.m_rightMax = 1.0;
+  }
 } // XmSlopedAbutmentUtilImpl::EndCapCrossSectionShouldersTo2dCrossSection
 //------------------------------------------------------------------------------
 /// \brief Sets up variables to perform the conversion
