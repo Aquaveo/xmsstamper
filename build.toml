@@ -1,5 +1,6 @@
 library_name = "xmsstamper"
 description = "Stamping library for XMS products"
+extra_export_sources = ["test_files"]
 
 xms_dependencies = [
     { name = "xmscore", version = "7.0.0" },
