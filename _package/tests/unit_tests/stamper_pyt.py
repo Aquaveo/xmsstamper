@@ -22,7 +22,7 @@ class TestStamper(unittest.TestCase):
             )
         )
         self.assertTrue(os.path.isdir(self.base_file_path),
-                        "Input file directory does not exist")
+                        f"Input file directory does not exist {self.base_file_path}")
         self.output_file_path = os.path.join(
             os.path.abspath(
                 os.path.join(script_path, '..', '..', '..', 'output_files')
