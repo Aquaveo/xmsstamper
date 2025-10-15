@@ -18,13 +18,11 @@ class TestStamper(unittest.TestCase):
         script_path = os.path.dirname(script_file)
         self.base_file_path = os.path.join(
             os.path.abspath(
-                os.path.join(script_path, '..', '..', '..', '_package', 'tests', 'test_files')
+                os.path.join(script_path, '..', 'test_files')
             )
         )
-        self.assertTrue(os.path.isdir(os.path.join(script_path, '..', '..', '..')))
-        self.assertEqual([], os.listdir(os.path.join(script_path, '..', '..', '..')))
-        self.assertTrue(os.path.isdir(os.path.join(script_path, '..', '..', '..', '_package')))
-        self.assertTrue(os.path.isdir(os.path.join(script_path, '..', '..', '..', '_package', 'tests')))
+        self.assertTrue(os.path.isdir(os.path.join(script_path, '..')))
+        self.assertEqual([], os.listdir(os.path.join(script_path, '..')))
         self.assertTrue(os.path.isdir(self.base_file_path),
                         f"Input file directory does not exist {self.base_file_path}")
         self.output_file_path = os.path.join(
