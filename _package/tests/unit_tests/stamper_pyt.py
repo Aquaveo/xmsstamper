@@ -22,7 +22,7 @@ class TestStamper(unittest.TestCase):
             )
         )
         self.assertTrue(os.path.isdir(os.path.join(script_path, '..', '..', '..')))
-        self.assertTrue([] == os.listdir(os.path.join(script_path, '..', '..', '..')))
+        self.assertEqual([], os.listdir(os.path.join(script_path, '..', '..', '..')))
         self.assertTrue(os.path.isdir(os.path.join(script_path, '..', '..', '..', '_package')))
         self.assertTrue(os.path.isdir(os.path.join(script_path, '..', '..', '..', '_package', 'tests')))
         self.assertTrue(os.path.isdir(self.base_file_path),
