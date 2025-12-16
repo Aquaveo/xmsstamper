@@ -60,11 +60,7 @@ public:
   virtual void IntersectEndCaps(XmStamperIo& a_io, XmStamper3dPts& a_pts) override;
 
   void ClassifyPoints(VecPt3d& a_pts, VecInt& a_ptLocation);
-  bool HaveIntersector();
-  void TraverseLineSegment(const Pt3d& a_p1,
-                           const Pt3d& a_p2,
-                           std::vector<int>& a_polyids,
-                           std::vector<double>& a_tvalues);
+  void CreateIntersector();
   void Intersect3dPts(VecPt3d& a_pts);
   void IntersectXsectSide(VecPt3d& a_cl, VecPt3d2d& a_side);
   void IntersectSlopedAbutment(XmStamperIo& a_io, XmStamper3dPts& a_pts, bool a_first);
@@ -76,7 +72,6 @@ public:
   Pt3d m_max;          ///< max x,y,z of stamp
   BSHP<GmMultiPolyIntersector>
     m_intersect;   ///< polygon intersector for intersecting objects with the bathemetry TIN
-  BSHP<GmTriSearch> m_tSearch;
   VecInt m_triIds; ///< the ids of the triangles in the intersector
   double m_xyTol;  ///< xy tolerance for geometry comparisons
 };
@@ -119,10 +114,10 @@ XmBathymetryIntersectorImpl::~XmBathymetryIntersectorImpl()
 void XmBathymetryIntersectorImpl::IntersectCenterLine(XmStamperIo& a_io)
 {
   // get the bounds of the center line
-  if (!HaveIntersector())
-  {
+  if (!m_intersect)
+    CreateIntersector();
+  if (!m_intersect)
     return;
-  }
   // intersect the center line in 2d with the tin
   VecPt3d& pts(m_tin->Points());
   VecInt& tris(m_tin->Triangles());
@@ -137,7 +132,7 @@ void XmBathymetryIntersectorImpl::IntersectCenterLine(XmStamperIo& a_io)
     Pt3d &p0(line[i - 1]), &p1(line[i]);
     line1.push_back(p0);
     vXs.push_back(ioXs[i - 1]);
-    TraverseLineSegment(p0, p1, triIds, tVals);
+    m_intersect->TraverseLineSegment(p0.x, p0.y, p1.x, p1.y, triIds, tVals);
     for (size_t j = 0; j < triIds.size(); ++j)
     {
       if (triIds[j] < 0)
@@ -274,10 +269,10 @@ void XmBathymetryIntersectorImpl::DecomposeCenterLine(XmStamperIo& a_io,
 void XmBathymetryIntersectorImpl::ClassifyPoints(VecPt3d& a_pts, VecInt& a_ptLocation)
 {
   a_ptLocation.assign(a_pts.size(), -2);
-  if (!HaveIntersector())
-  {
+  if (!m_intersect)
+    CreateIntersector();
+  if (!m_intersect)
     return;
-  }
   VecInt triIds;
   VecDbl tVals;
   VecPt3d& pts(m_tin->Points());
@@ -286,7 +281,7 @@ void XmBathymetryIntersectorImpl::ClassifyPoints(VecPt3d& a_pts, VecInt& a_ptLoc
   {
     Pt3d& p0(a_pts[i]);
     // get the triangle with the point
-    TraverseLineSegment(p0, p0, triIds, tVals);
+    m_intersect->TraverseLineSegment(p0.x, p0.y, p0.x, p0.y, triIds, tVals);
     if (!triIds.empty())
     {
       // get the triangle id for the triangle in the TIN
@@ -317,10 +312,10 @@ void XmBathymetryIntersectorImpl::ClassifyPoints(VecPt3d& a_pts, VecInt& a_ptLoc
 //------------------------------------------------------------------------------
 void XmBathymetryIntersectorImpl::IntersectXsects(XmStamper3dPts& a_pts)
 {
-  if (!HaveIntersector())
-  {
+  if (!m_intersect)
+    CreateIntersector();
+  if (!m_intersect)
     return;
-  }
 
   IntersectXsectSide(a_pts.m_xsPts.m_centerLine, a_pts.m_xsPts.m_left);
   IntersectXsectSide(a_pts.m_xsPts.m_centerLine, a_pts.m_xsPts.m_right);
@@ -335,10 +330,10 @@ void XmBathymetryIntersectorImpl::IntersectXsects(XmStamper3dPts& a_pts)
 void XmBathymetryIntersectorImpl::IntersectEndCaps(XmStamperIo& a_io, XmStamper3dPts& a_pts)
 {
   XM_ENSURE_TRUE(!a_io.m_cs.empty());
-  if (!HaveIntersector())
-  {
+  if (!m_intersect)
+    CreateIntersector();
+  if (!m_intersect)
     return;
-  }
 
   int type = a_io.m_firstEndCap.m_type;
   if (type == 1)
@@ -379,12 +374,10 @@ void XmBathymetryIntersectorImpl::IntersectXsectSide(VecPt3d& a_cl, VecPt3d2d& a
 //------------------------------------------------------------------------------
 /// \brief Creates a multi poly intersector if one does not exist
 //------------------------------------------------------------------------------
-bool XmBathymetryIntersectorImpl::HaveIntersector()
+void XmBathymetryIntersectorImpl::CreateIntersector()
 {
-  if (m_intersect && m_tSearch)
-  {
-    return true;
-  }
+  if (m_intersect)
+    m_intersect.reset();
 
   const VecPt3d& pts(m_tin->Points());
   VecInt &tris(m_tin->Triangles()), vTri(3, 0);
@@ -393,7 +386,7 @@ bool XmBathymetryIntersectorImpl::HaveIntersector()
   ptFlags.resize(pts.size(), true);
 
   // classify points
-  m_tSearch = GmTriSearch::New();
+  BSHP<GmTriSearch> tSearch = GmTriSearch::New();
   if (m_stamp)
   {
     BSHP<VecInt> tPtr(new VecInt());
@@ -401,17 +394,13 @@ bool XmBathymetryIntersectorImpl::HaveIntersector()
       VecInt& tmp(m_stamp->Triangles());
       tPtr->reserve(tmp.size());
       for (const auto& t : tmp)
-      {
         tPtr->push_back((int)t);
-      }
     }
-    m_tSearch->TrisToSearch(m_stamp->PointsPtr(), tPtr);
+    tSearch->TrisToSearch(m_stamp->PointsPtr(), tPtr);
     for (size_t i = 0; i < pts.size(); ++i)
     {
-      if (XM_NONE == m_tSearch->TriContainingPt(pts[i]))
-      {
+      if (XM_NONE == tSearch->TriContainingPt(pts[i]))
         ptFlags[i] = 0;
-      }
     }
   }
 
@@ -436,7 +425,7 @@ bool XmBathymetryIntersectorImpl::HaveIntersector()
       gmAddToExtents(pts[ix0], pMin, pMax);
       gmAddToExtents(pts[ix1], pMin, pMax);
       gmAddToExtents(pts[ix2], pMin, pMax);
-      m_tSearch->TriEnvelopesOverlap(pMin, pMax, tIdxes);
+      tSearch->TriEnvelopesOverlap(pMin, pMax, tIdxes);
       if (!tIdxes.empty())
       {
         triFlags[cnt] = 1;
@@ -450,11 +439,21 @@ bool XmBathymetryIntersectorImpl::HaveIntersector()
   for (size_t i = 0, cnt = 0; i < tris.size(); i += 3)
   {
     if (!triFlags[i / 3])
-    {
       continue;
-    }
+
+    // see if the boxes overlap
+    // Pt3d pMin(XM_DBL_HIGHEST), pMax(XM_DBL_LOWEST);
+    // gmAddToExtents(pts[tris[i + 0]], pMin, pMax);
+    // gmAddToExtents(pts[tris[i + 1]], pMin, pMax);
+    // gmAddToExtents(pts[tris[i + 2]], pMin, pMax);
+    // if (!gmBoxesOverlap2d(m_min, m_max, pMin, pMax)) continue;
 
     m_triIds[cnt] = (int)i;
+    // polys.push_back(vTri);
+    // polys.back()[0] = tris[i + 0];
+    // polys.back()[1] = tris[i + 1];
+    // polys.back()[2] = tris[i + 2];
+
     polys[cnt][0] = tris[i + 0];
     polys[cnt][1] = tris[i + 1];
     polys[cnt][2] = tris[i + 2];
@@ -465,25 +464,7 @@ bool XmBathymetryIntersectorImpl::HaveIntersector()
     boost::make_shared<GmMultiPolyIntersectionSorterTerse>();
   BSHP<GmMultiPolyIntersectionSorter> sorter = BDPC<GmMultiPolyIntersectionSorter>(sorterTerse);
   m_intersect = GmMultiPolyIntersector::New(pts, polys, sorter);
-
-  if (m_intersect)
-  {
-    return true;
-  }
-
-  return false;
 } // XmBathymetryIntersectorImpl::CreateIntersector
-
-/// \brief Intersects a line with a surface
-/// \param a_pts: ???
-//------------------------------------------------------------------------------
-void XmBathymetryIntersectorImpl::TraverseLineSegment(const Pt3d& a_p1, const Pt3d& a_p2,
-                         std::vector<int>& a_polyids,
-                         std::vector<double>& a_tvalues)
-{
-  m_intersect->TraverseLineSegment(a_p1.x, a_p1.y, a_p2.x, a_p2.y, a_polyids, a_tvalues);
-} // XmBathymetryIntersectorImpl::TraverseLineSegment
-
 //------------------------------------------------------------------------------
 /// \brief Intersects a line with a surface
 /// \param a_pts: ???
@@ -501,7 +482,7 @@ void XmBathymetryIntersectorImpl::Intersect3dPts(VecPt3d& a_pts)
   for (size_t i = 1; !done && i < line.size(); ++i)
   {
     Pt3d &p0(line[i - 1]), &p1(line[i]);
-    TraverseLineSegment(p0, p1, triIds, tVals);
+    m_intersect->TraverseLineSegment(p0.x, p0.y, p1.x, p1.y, triIds, tVals);
     for (size_t j = 0; !done && j < triIds.size(); ++j)
     {
       if (triIds[j] < 0)
