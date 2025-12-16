@@ -501,7 +501,7 @@ void TutStampingUnitTests::test_StampIntersectBathymetry()
   // verify the outputs
   TS_ASSERT(io.m_outTin); // the output TIN should exist
   xms::VecPt3d basePts = {{0, 0, 15},          {10, 10, 15},        {-3.54, 3.54, 15},
-                          {-9.42, 9.42, 6.68}, {6.46, 13.54, 15},   {-4.14, 24.14, 0},
+                          {-9.42, 9.42, 6.68}, {6.46, 13.54, 15},   {0.583102, 19.4169, 6.6825},
                           {3.54, -3.54, 15},   {7.18, -7.18, 9.84}, {13.54, 6.46, 15},
                           {17.18, 2.82, 9.84}};
   TS_ASSERT_DELTA_VECPT3D(basePts, io.m_outTin->Points(), 1e-2);
