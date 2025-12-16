@@ -473,7 +473,7 @@ void TutStampingUnitTests::test_StampIntersectBathymetry()
   BSHP<xms::VecPt3d> tPts(new xms::VecPt3d());
   *tPts = {{-1, 25, 6}, {-15, 11, 6}, {5, -11, 10}, {20, 4, 10}};
   BSHP<xms::VecInt> tTris(new xms::VecInt());
-  *tTris = {0, 1, 2, 1, 3, 2};
+  *tTris = {0, 1, 2, 0, 2, 3};
   tin->SetPoints(tPts);
   tin->SetTriangles(tTris);
   // set the bathymetry member of the io class
