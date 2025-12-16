@@ -61,10 +61,8 @@ public:
 
   void ClassifyPoints(VecPt3d& a_pts, VecInt& a_ptLocation);
   bool HaveIntersector();
-  void TraverseLineSegment(double a_x1,
-                           double a_y1,
-                           double a_x2,
-                           double a_y2,
+  void TraverseLineSegment(const Pt3d& a_p1,
+                           const Pt3d& a_p2,
                            std::vector<int>& a_polyids,
                            std::vector<double>& a_tvalues);
   void Intersect3dPts(VecPt3d& a_pts);
@@ -139,7 +137,7 @@ void XmBathymetryIntersectorImpl::IntersectCenterLine(XmStamperIo& a_io)
     Pt3d &p0(line[i - 1]), &p1(line[i]);
     line1.push_back(p0);
     vXs.push_back(ioXs[i - 1]);
-    TraverseLineSegment(p0.x, p0.y, p1.x, p1.y, triIds, tVals);
+    TraverseLineSegment(p0, p1, triIds, tVals);
     for (size_t j = 0; j < triIds.size(); ++j)
     {
       if (triIds[j] < 0)
@@ -288,7 +286,7 @@ void XmBathymetryIntersectorImpl::ClassifyPoints(VecPt3d& a_pts, VecInt& a_ptLoc
   {
     Pt3d& p0(a_pts[i]);
     // get the triangle with the point
-    TraverseLineSegment(p0.x, p0.y, p0.x, p0.y, triIds, tVals);
+    TraverseLineSegment(p0, p0, triIds, tVals);
     if (!triIds.empty())
     {
       // get the triangle id for the triangle in the TIN
@@ -479,14 +477,11 @@ bool XmBathymetryIntersectorImpl::HaveIntersector()
 /// \brief Intersects a line with a surface
 /// \param a_pts: ???
 //------------------------------------------------------------------------------
-void XmBathymetryIntersectorImpl::TraverseLineSegment(double a_x1,
-                         double a_y1,
-                         double a_x2,
-                         double a_y2,
+void XmBathymetryIntersectorImpl::TraverseLineSegment(const Pt3d& a_p1, const Pt3d& a_p2,
                          std::vector<int>& a_polyids,
                          std::vector<double>& a_tvalues)
 {
-  m_intersect->TraverseLineSegment(a_x1, a_y1, a_x2, a_y2, a_polyids, a_tvalues);
+  m_intersect->TraverseLineSegment(a_p1.x, a_p1.y, a_p2.x, a_p2.y, a_polyids, a_tvalues);
 } // XmBathymetryIntersectorImpl::TraverseLineSegment
 
 //------------------------------------------------------------------------------
@@ -506,7 +501,7 @@ void XmBathymetryIntersectorImpl::Intersect3dPts(VecPt3d& a_pts)
   for (size_t i = 1; !done && i < line.size(); ++i)
   {
     Pt3d &p0(line[i - 1]), &p1(line[i]);
-    TraverseLineSegment(p0.x, p0.y, p1.x, p1.y, triIds, tVals);
+    TraverseLineSegment(p0, p1, triIds, tVals);
     for (size_t j = 0; !done && j < triIds.size(); ++j)
     {
       if (triIds[j] < 0)
