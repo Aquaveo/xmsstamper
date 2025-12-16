@@ -60,7 +60,7 @@ public:
   virtual void IntersectEndCaps(XmStamperIo& a_io, XmStamper3dPts& a_pts) override;
 
   void ClassifyPoints(VecPt3d& a_pts, VecInt& a_ptLocation);
-  void CreateIntersector();
+  bool HaveIntersector();
   void Intersect3dPts(VecPt3d& a_pts);
   void IntersectXsectSide(VecPt3d& a_cl, VecPt3d2d& a_side);
   void IntersectSlopedAbutment(XmStamperIo& a_io, XmStamper3dPts& a_pts, bool a_first);
@@ -72,6 +72,7 @@ public:
   Pt3d m_max;          ///< max x,y,z of stamp
   BSHP<GmMultiPolyIntersector>
     m_intersect;   ///< polygon intersector for intersecting objects with the bathemetry TIN
+  BSHP<GmTriSearch> m_tSearch;
   VecInt m_triIds; ///< the ids of the triangles in the intersector
   double m_xyTol;  ///< xy tolerance for geometry comparisons
 };
@@ -114,10 +115,10 @@ XmBathymetryIntersectorImpl::~XmBathymetryIntersectorImpl()
 void XmBathymetryIntersectorImpl::IntersectCenterLine(XmStamperIo& a_io)
 {
   // get the bounds of the center line
-  if (!m_intersect)
-    CreateIntersector();
-  if (!m_intersect)
+  if (!HaveIntersector())
+  {
     return;
+  }
   // intersect the center line in 2d with the tin
   VecPt3d& pts(m_tin->Points());
   VecInt& tris(m_tin->Triangles());
@@ -269,10 +270,10 @@ void XmBathymetryIntersectorImpl::DecomposeCenterLine(XmStamperIo& a_io,
 void XmBathymetryIntersectorImpl::ClassifyPoints(VecPt3d& a_pts, VecInt& a_ptLocation)
 {
   a_ptLocation.assign(a_pts.size(), -2);
-  if (!m_intersect)
-    CreateIntersector();
-  if (!m_intersect)
+  if (!HaveIntersector())
+  {
     return;
+  }
   VecInt triIds;
   VecDbl tVals;
   VecPt3d& pts(m_tin->Points());
@@ -312,10 +313,10 @@ void XmBathymetryIntersectorImpl::ClassifyPoints(VecPt3d& a_pts, VecInt& a_ptLoc
 //------------------------------------------------------------------------------
 void XmBathymetryIntersectorImpl::IntersectXsects(XmStamper3dPts& a_pts)
 {
-  if (!m_intersect)
-    CreateIntersector();
-  if (!m_intersect)
+  if (!HaveIntersector())
+  {
     return;
+  }
 
   IntersectXsectSide(a_pts.m_xsPts.m_centerLine, a_pts.m_xsPts.m_left);
   IntersectXsectSide(a_pts.m_xsPts.m_centerLine, a_pts.m_xsPts.m_right);
@@ -330,10 +331,10 @@ void XmBathymetryIntersectorImpl::IntersectXsects(XmStamper3dPts& a_pts)
 void XmBathymetryIntersectorImpl::IntersectEndCaps(XmStamperIo& a_io, XmStamper3dPts& a_pts)
 {
   XM_ENSURE_TRUE(!a_io.m_cs.empty());
-  if (!m_intersect)
-    CreateIntersector();
-  if (!m_intersect)
+  if (!HaveIntersector())
+  {
     return;
+  }
 
   int type = a_io.m_firstEndCap.m_type;
   if (type == 1)
@@ -374,10 +375,12 @@ void XmBathymetryIntersectorImpl::IntersectXsectSide(VecPt3d& a_cl, VecPt3d2d& a
 //------------------------------------------------------------------------------
 /// \brief Creates a multi poly intersector if one does not exist
 //------------------------------------------------------------------------------
-void XmBathymetryIntersectorImpl::CreateIntersector()
+bool XmBathymetryIntersectorImpl::HaveIntersector()
 {
   if (m_intersect)
-    m_intersect.reset();
+  {
+    return true;
+  }
 
   const VecPt3d& pts(m_tin->Points());
   VecInt &tris(m_tin->Triangles()), vTri(3, 0);
@@ -464,6 +467,13 @@ void XmBathymetryIntersectorImpl::CreateIntersector()
     boost::make_shared<GmMultiPolyIntersectionSorterTerse>();
   BSHP<GmMultiPolyIntersectionSorter> sorter = BDPC<GmMultiPolyIntersectionSorter>(sorterTerse);
   m_intersect = GmMultiPolyIntersector::New(pts, polys, sorter);
+
+  if (m_intersect)
+  {
+    return true;
+  }
+
+  return false;
 } // XmBathymetryIntersectorImpl::CreateIntersector
 //------------------------------------------------------------------------------
 /// \brief Intersects a line with a surface
