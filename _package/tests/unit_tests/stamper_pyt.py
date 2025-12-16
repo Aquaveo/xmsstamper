@@ -510,7 +510,7 @@ class TestStamper(unittest.TestCase):
 
         # Create a TIN to represent bathymetry
         pts = ((-1, 25, 6), (-15, 11, 6), (5, -11, 10), (20, 4, 10))
-        tris = (0, 1, 2, 1, 3, 2)
+        tris = (0, 1, 2, 0, 2, 3)
         tin = xmsgrid.triangulate.Tin(pts, tris)
         io_bathymetry = tin
 
@@ -556,7 +556,7 @@ class TestStamper(unittest.TestCase):
         self.assert_files_equal(base_file, output_file)
 
         base_pts = ((0, 0, 15), (10, 10, 15), (-3.54, 3.54, 15),
-                    (-9.42, 9.42, 6.68), (6.46, 13.54, 15), (-4.14, 24.14, 0),
+                    (-9.42, 9.42, 6.68), (6.46, 13.54, 15), (0.583102, 19.4169, 6.6825),
                     (3.54, -3.54, 15), (7.18, -7.18, 9.84), (13.54, 6.46, 15),
                     (17.18, 2.82, 9.84))
 
