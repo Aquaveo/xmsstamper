@@ -93,8 +93,8 @@ static void iDoTest(const std::string& a_relPath)
   iBuildStamperIo(path, io);
   BSHP<XmStamper> s = XmStamper::New();
   s->DoStamp(io);
-  std::string baseFile(path + "xmsng_base.txt");
-  std::string outFile(path + "xmsng_out.txt");
+  std::string baseFile, outFile;
+  ttGetTestFilePaths(path, "xmsng", ".txt", baseFile, outFile);
   iOutputToFile(outFile, io);
   std::string outTin(path + "tin_out.tin");
   if (io.m_outTin && io.m_outTin->NumPoints() > 0)
