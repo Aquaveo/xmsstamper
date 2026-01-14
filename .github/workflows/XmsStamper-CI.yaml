@@ -332,6 +332,7 @@ jobs:
         uses: actions/checkout@v2
       # Setup Python
       - name: Set up Python 3.13
+        id: cp313
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
@@ -387,8 +388,17 @@ jobs:
         run: xmsconan_gen --version ${{ env.XMS_VERSION }} build.toml
       # Build the Conan Package
       - name: Build the Conan Packages
-        run: "python build.py --filter=\"{\\\"build_type\\\": \\\"${{ matrix.build_type }}\\\"}\""
         shell: cmd
+        env:
+          PY313: ${{ steps.cp313.outputs.python-path }}
+          Python3_ROOT_DIR: ${{ steps.cp313.outputs.python-path }}
+          Python_ROOT_DIR:  ${{ steps.cp313.outputs.python-path }}
+        run: |
+          echo PY313=%PY313%
+          set "PATH=%PY313%;%PY313%\Scripts;%PATH%"
+          where python
+          python --version
+          python build.py --filter="{\"build_type\": \"${{ matrix.build_type }}\"}"
       # Upload Release to Conan
       - name: Upload Releases to Conan
         run: "python build.py --skip-build --upload --filter=\"{\\\"build_type\\\": \\\"${{ matrix.build_type }}\\\"}\""
