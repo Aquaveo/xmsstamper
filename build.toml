@@ -57,4 +57,4 @@ pybind_headers = [
 ]
 
 [ci]
-python_versions = ["3.10", "3.12"]
+python_versions = ["3.10", "3.13"]
