@@ -1,11 +1,12 @@
 library_name = "xmsstamper"
 description = "Stamping library for XMS products"
+ci_type = "github"
 extra_export_sources = ["test_files"]
 
 xms_dependencies = [
-    { name = "xmscore", version = "7.0.0" },
-    { name = "xmsgrid", version = "9.0.2" },
-    { name = "xmsinterp", version = "7.0.1" },
+    { name = "xmscore", version = "7.0.7" },
+    { name = "xmsgrid", version = "9.0.8" },
+    { name = "xmsinterp", version = "7.0.7" },
 ]
 
 python_namespaced_dir = "stamper"
@@ -54,3 +55,6 @@ pybind_sources = [
 pybind_headers = [
     "xmsstamper/python/stamper/stamper_py.h"
 ]
+
+[ci]
+python_versions = ["3.10", "3.12"]
