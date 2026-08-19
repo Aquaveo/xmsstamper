@@ -72,3 +72,13 @@ test_files/**/*_out.*
 build/*
 build_py/*
 output_files/*
+
+# ── Local configuration ───────────────────────
+.claude/worktrees/
+.claude/settings.local.json
+CLAUDE.local.md
+.envrc
+CMakePresets.json
+CMakeUserPresets.json
+**/CMakeUserPresets.json
+conan_profiles/
