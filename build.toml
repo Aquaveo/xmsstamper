@@ -4,9 +4,9 @@ ci_type = "github"
 extra_export_sources = ["test_files"]
 
 xms_dependencies = [
-    { name = "xmscore", version = "7.0.12" },
-    { name = "xmsgrid", version = "9.1.0" },
-    { name = "xmsinterp", version = "7.0.11" },
+    { name = "xmscore", version = "7.0.13" },
+    { name = "xmsgrid", version = "9.1.1" },
+    { name = "xmsinterp", version = "7.0.12" },
 ]
 
 python_namespaced_dir = "stamper"
@@ -57,4 +57,6 @@ pybind_headers = [
 ]
 
 [ci]
-python_versions = ["3.10", "3.13"]
+python_versions = ["3.10", "3.13", "3.14"]
+mac_python_versions = ["3.13", "3.14"]
+linux_python_versions = ["3.13", "3.14"]
