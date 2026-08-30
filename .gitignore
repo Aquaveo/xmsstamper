@@ -72,3 +72,8 @@ test_files/**/*_out.*
 build/*
 build_py/*
 output_files/*
+
+# Claude Code local state: ephemeral worktrees and per-developer
+# settings. Neither is shared.
+.claude/worktrees/
+.claude/settings.local.json
